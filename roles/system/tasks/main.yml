@@ -1,0 +1,83 @@
+---
+
+- name: Create freeton group
+  group:
+    name: "{{ freeton_node_group }}"
+    state: present
+
+- name: Create freeton user
+  user:
+    name: "{{ freeton_node_user }}"
+    comment: "Freeton User"
+    group: "{{ freeton_node_group }}"
+    shell: /bin/bash
+    state: present
+
+- name: Set timezone to "{{ timezone }}"
+  timezone:
+    name: "{{ timezone }}"
+  when: timezone is defined and timezone | length > 0
+
+- name: Install system packages
+  package:
+    name:
+      - vim
+      - mc
+      - htop
+      - rsyslog
+      - apt-transport-https
+      - wget
+      - gnupg
+      - ca-certificates
+      - curl
+      - dnsutils
+      - jq
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+- block:
+    - name: Install ntp package
+      package:
+        name: ntp
+        state: present
+        update_cache: yes
+      when: ansible_os_family == "Debian"
+
+    - name: Copy the ntp.conf file
+      template:
+        src: ntp.conf.j2
+        dest: /etc/ntp.conf
+      notify: "restart ntp"
+      when: ansible_os_family == "Debian"
+  when: ntp_enabled is defined and ntp_enabled|bool
+
+- name: Linux PAM limits | add or modify nofile limits
+  pam_limits:
+    domain: "{{ freeton_node_user }}"
+    limit_type: "{{ item.limit_type }}"
+    limit_item: "{{ item.limit_item }}"
+    value: "{{ item.value }}"
+  loop:
+    - {limit_type: 'soft', limit_item: 'nofile', value: "{{ soft_nofile }}"}
+    - {limit_type: 'hard', limit_item: 'nofile', value: "{{ hard_nofile }}"}
+  when: set_limits is defined and set_limits|bool
+
+- name: Create systemd service "disable-transparent-huge-pages.service"
+  copy:
+    src: 'disable-transparent-huge-pages.service'
+    dest: /etc/systemd/system/disable-transparent-huge-pages.service
+  notify: "restart disable-thp"
+  when: disable_thp is defined and disable_thp|bool
+
+- name: Setting kernel parameters
+  sysctl:
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+    sysctl_set: true
+    state: present
+    sysctl_file: "/etc/sysctl.d/99-freeton.conf"
+    reload: true
+  loop: "{{ sysctl_conf.freeton_node | list | unique }}"
+  ignore_errors: true
+  when: sysctl_set|bool and sysctl_conf | length > 0

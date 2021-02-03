@@ -1,0 +1,25 @@
+---
+
+- hosts: freeton_node
+  become: true
+  become_method: sudo
+  gather_facts: true
+  any_errors_fatal: true
+  vars_files:
+    - vars/freeton_node.yml
+    - vars/system.yml
+  pre_tasks:
+    - name: Checking distribution
+      fail:
+        msg: "{{ ansible_distribution }} is not supported"
+      when: ansible_distribution not in os_valid_distributions
+
+    - name: Checking version of OS distribution
+      fail:
+        msg: "{{ ansible_distribution_version }} of {{ ansible_distribution }} is not supported"
+      when: ansible_distribution_version is version_compare(os_minimum_versions[ansible_distribution], '<')
+  roles:
+   - system
+   - freeton_node_compile
+   - freeton_node_deploy
+    

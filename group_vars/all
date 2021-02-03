@@ -1,0 +1,8 @@
+---
+# "Check system" variables
+
+os_valid_distributions:
+  - Ubuntu
+
+os_minimum_versions:
+  Ubuntu: 18.04

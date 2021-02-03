@@ -1,0 +1,51 @@
+# Set ton network global config:
+# main: https://raw.githubusercontent.com/tonlabs/main.ton.dev/master/configs/ton-global.config.json
+# net: https://raw.githubusercontent.com/tonlabs/net.ton.dev/master/configs/net.ton.dev/ton-global.config.json
+# rustnet (default): https://raw.githubusercontent.com/tonlabs/rustnet.ton.dev/main/configs/ton-global.config.json
+# fld: https://raw.githubusercontent.com/FreeTON-Network/fld.ton.dev/main/configs/fld.ton.dev/ton-global.config.json
+freeton_node_global_config_URL: "https://raw.githubusercontent.com/tonlabs/rustnet.ton.dev/main/configs/ton-global.config.json"
+
+# Get freeton node commit id: https://github.com/tonlabs/ton-labs-node/commits
+freeton_node_github_repo: "https://github.com/tonlabs/ton-labs-node.git"
+freeton_node_github_commit_id: "master"
+# Get freeton node tools commit id: https://github.com/tonlabs/ton-labs-node-tools/commits"
+freeton_node_tools_github_repo: "https://github.com/tonlabs/ton-labs-node-tools.git"
+freeton_node_tools_github_commit_id: "45569bce525c1b641b5d4079fe2eba76b5a5cbe4"
+# Get tonos cli commit id: https://github.com/tonlabs/tonos-cli/commits"
+tonos_cli_github_repo: "https://github.com/tonlabs/tonos-cli.git"
+tonos_cli_github_commit_id: "master"
+# Get TVM linker commit id: https://github.com/tonlabs/TVM-linker/commits"
+tvm_linker_github_repo: "https://github.com/tonlabs/TVM-linker.git"
+tvm_linker_github_commit_id: "master"
+
+# Default user and group names
+freeton_node_user: "freeton"
+freeton_node_group: "freeton"
+
+# Set freetone_node service enabled for autostart after system restart: yes|no
+freeton_node_service_autostart: "yes"
+# Freetone_node service state after ansible script deploying: restarted|started|stopped
+freeton_node_service_state: "restarted"
+
+# Specify freeton dirs
+freeton_node_bin_dir: "/opt/freeton"
+freeton_node_src_dir: "/usr/local/src/freeton"
+freeton_node_tools_dir: "/opt/freeton/tools"
+freeton_node_work_dir: "/var/lib/freeton"
+freeton_node_config_dir: "/etc/freeton"
+freeton_node_contracts_dir: "/etc/freeton/contracts"
+freeton_node_log_dir: "/var/log/freeton"
+
+# Freeton smart contracts
+freeton_node_contract_URLs:
+  - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/depool/DePool.abi.json
+  - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/depool/DePool.tvc
+  - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/depool/DePoolHelper.abi.json
+  - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/depool/DePoolHelper.tvc
+  - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/safemultisig/SafeMultisigWallet.abi.json
+  - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/safemultisig/SafeMultisigWallet.tvc
+  - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/setcodemultisig/SetcodeMultisigWallet.abi.json
+  - https://github.com/tonlabs/ton-labs-contracts/blob/master/solidity/setcodemultisig/SetcodeMultisigWallet.tvc
+
+freeton_node_contract_URLs_fld:
+  - https://github.com/FreeTON-Network/fld.ton.dev/raw/main/scripts/Marvin.abi.json

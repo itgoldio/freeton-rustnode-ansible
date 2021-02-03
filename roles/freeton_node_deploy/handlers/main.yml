@@ -1,0 +1,9 @@
+---
+
+- name: Enable and start freeton systemd service
+  systemd:
+    daemon_reload: true
+    name: freeton
+    enabled: "{{ freeton_node_service_autostart }}"
+    state: "{{ freeton_node_service_state }}"
+  listen: freeton_systemd

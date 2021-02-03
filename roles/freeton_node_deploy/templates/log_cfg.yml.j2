@@ -1,0 +1,30 @@
+# more info in https://docs.rs/log4rs/1.0.0/log4rs/
+
+# Scan this file for changes every 30 seconds
+refresh_rate: 30 seconds
+
+# write logs to file and rotate it.
+appenders:
+  rolling:
+    kind: rolling_file
+    path: {{ freeton_node_log_dir }}/node.log
+    policy:
+      kind: compound
+      trigger:
+        kind: size
+        limit: 10 mb
+      roller:
+        kind: fixed_window
+        pattern: {{ freeton_node_log_dir }}/node.{}.log
+        count: 10
+        base: 1
+
+root:
+# level can be: trace, debug, info, warn
+# trace include all levels,
+# debug include debug, info and warn levels,
+# info  include info and warn
+# warn  just warn level
+  level: info
+  appenders:
+    - rolling

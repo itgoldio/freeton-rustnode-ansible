@@ -1,0 +1,175 @@
+---
+- name: Set ton net URL
+  set_fact:
+    ton_net_url: >
+      "{% if freeton_node_global_config_URL == 'https://raw.githubusercontent.com/tonlabs/main.ton.dev/master/configs/ton-global.config.json'
+      %}main.ton.dev{% elif freeton_node_global_config_URL == 'https://raw.githubusercontent.com/tonlabs/net.ton.dev/master/configs/net.ton.dev/ton-global.config.json'
+      %}net.ton.dev{% elif freeton_node_global_config_URL == 'https://raw.githubusercontent.com/tonlabs/rustnet.ton.dev/main/configs/ton-global.config.json'
+      %}rustnet.ton.dev{% elif freeton_node_global_config_URL == 'https://raw.githubusercontent.com/FreeTON-Network/fld.ton.dev/main/configs/fld.ton.dev/ton-global.config.json'
+      %}gql.custler.net{% endif %}"
+
+- name: Copy freeton node tools binaries
+  copy:
+    src: "{{ freeton_node_src_dir }}/debug/{{ item }}"
+    dest: "{{ freeton_node_bin_dir }}/tools/{{ item }}"
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+    mode: u=rwx,g=rw,o=r
+    remote_src: yes
+  loop:
+    - console
+    - dhtscan
+    - gendht
+    - keygen
+    - print
+    - zerostate
+  when: freeton_node_tools_sources.changed
+
+- name: Copy tonos cli binaries
+  copy:
+    src: "{{ freeton_node_src_dir }}/debug/tonos-cli"
+    dest: "{{ freeton_node_bin_dir }}/tools/tonos-cli"
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+    mode: u=rwx,g=rw,o=r
+    remote_src: yes
+  when: tonos_cli_sources.changed
+
+- name: Copy tvm linker binaries
+  copy:
+    src: "{{ freeton_node_src_dir }}/debug/tvm_linker"
+    dest: "{{ freeton_node_bin_dir }}/tools/tvm_linker"
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+    mode: u=rwx,g=rw,o=r
+    remote_src: yes
+  when: tvm_linker_sources.changed
+
+- name: Copy freeton node binaries
+  copy:
+    src: "{{ freeton_node_src_dir }}/debug/ton_node"
+    dest: "{{ freeton_node_bin_dir }}"
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+    mode: u=rwx,g=rw,o=r
+    remote_src: yes
+  when: freeton_node_sources.changed
+  notify: freeton_systemd
+
+- name: Get freeton global config
+  get_url:
+    url: "{{ freeton_node_global_config_URL }}"
+    dest: "{{ freeton_node_config_dir }}"
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+    mode: u=rw,g=rw,o=r
+  notify: freeton_systemd
+
+- name: Copy default freeton config
+  copy:
+    src: "{{ freeton_node_src_dir }}/freeton_node/configs/default_config.json"
+    dest: "{{ freeton_node_config_dir }}"
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+    mode: u=rw,g=rw,o=r
+    remote_src: yes
+  notify: freeton_systemd
+
+- name: Copy logging config
+  template:
+    src: "log_cfg.yml.j2"
+    dest: "{{ freeton_node_config_dir }}/log_cfg.yml"
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+    mode: u=rw,g=rw,o=r
+  notify: freeton_systemd
+
+- name: Copy freeton systemd service environment variables
+  copy:
+    src: freeton.env.conf
+    dest: "/etc/systemd/system/freeton.service.d/"
+    mode: u=rw,g=r,o=r
+  notify: freeton_systemd
+
+- name: Create freeton systemd service
+  template:
+    src: "freeton.service.j2"
+    dest: "/etc/systemd/system/freeton.service"
+    mode: u=rw,g=r,o=r
+  notify: freeton_systemd
+
+- name: Config tonos-cli
+  command: ./tonos-cli --url https://{{ton_net_url}} config
+  args:
+    chdir: "{{ freeton_node_tools_dir }}"
+  become: yes
+  become_user: "{{ freeton_node_user }}"
+
+- name: Generate keys
+  shell: "./keygen > {{ freeton_node_config_dir }}/{{ ansible_hostname }}_client_keys.json"
+  args:
+    chdir: "{{ freeton_node_tools_dir }}"
+    creates: "{{ freeton_node_config_dir }}/{{ ansible_hostname }}_client_keys.json"
+  become: yes
+  become_user: "{{ freeton_node_user }}"
+
+- name: Generate ton_node key config
+  shell: "nohup {{ freeton_node_bin_dir}}/ton_node --configs {{ freeton_node_config_dir }} --ckey \"$(jq -c .public {{ freeton_node_config_dir }}/{{ ansible_hostname }}_client_keys.json)\" &"
+  args:
+    chdir: "{{ freeton_node_work_dir }}"
+    creates: "{{ freeton_node_config_dir }}/config.json"
+  become: yes
+  become_user: "{{ freeton_node_user }}"
+  register: ton_node_key_generated
+
+- name: Wait for console_config.json creation
+  wait_for:
+    path: "{{ freeton_node_config_dir }}/console_config.json"
+  when: ton_node_key_generated.changed
+
+- name: Kill ton_node process
+  shell: "pkill ton_node"
+  when: ton_node_key_generated.changed
+
+- name: Copy console_template.json
+  copy:
+    src: console_template.json
+    dest: "{{ freeton_node_config_dir }}/console_template.json"
+    force: no
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+    mode: u=rw,g=rw,o=r
+
+- name: Generate console.json config
+  shell: "{{ item }}"
+  args:
+    creates: "{{ freeton_node_config_dir }}/console.json"
+  become: yes
+  become_user: "{{ freeton_node_user }}"
+  loop:
+    - "jq \".config = $(cat {{ freeton_node_config_dir }}/console_config.json)\" {{ freeton_node_config_dir }}/console_template.json > {{ freeton_node_config_dir }}/console_tmp.json"
+    - "jq \".config.client_key = $(jq .private {{ freeton_node_config_dir }}/{{ ansible_hostname }}_client_keys.json)\" {{ freeton_node_config_dir }}/console_tmp.json > {{ freeton_node_config_dir }}/console.json"
+
+- name: Delete temp file
+  file:
+    path: "{{ freeton_node_config_dir }}/console_tmp.json"
+    state: absent
+
+- name: Copy smart contracts
+  get_url:
+    url: "{{ item }}"
+    dest: "{{ freeton_node_contracts_dir }}/"
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+    mode: u=rw,g=rw,o=r
+  loop: "{{ freeton_node_contract_URLs | list | unique }}"
+
+- name: Copy smart contracts for fld network
+  get_url:
+    url: "{{ item }}"
+    dest: "{{ freeton_node_contracts_dir }}/"
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+    mode: u=rw,g=rw,o=r
+  loop: "{{ freeton_node_contract_URLs_fld | list | unique }}"
+  when: ton_net_url == 'gql.custler.net'

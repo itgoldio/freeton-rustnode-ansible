@@ -1,0 +1,23 @@
+---
+
+- name: Restart ntp service
+  systemd:
+    name: ntp
+    enabled: true
+    state: restarted
+  listen: "restart ntp"
+
+- name: Restart ntpd service
+  systemd:
+    name: ntpd
+    enabled: true
+    state: restarted
+  listen: "restart ntpd"
+
+- name: Start disable-transparent-huge-pages service
+  systemd:
+    daemon_reload: true
+    name: disable-transparent-huge-pages
+    state: restarted
+    enabled: true
+  listen: "restart disable-thp"

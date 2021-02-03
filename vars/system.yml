@@ -1,0 +1,30 @@
+# Time sync parameters
+ntp_enabled: true  # or 'false' if you don't want to install and configure the ntp service
+# Do not set custom ntp servers to use default ntp pool
+ntp_servers: []
+
+# Set servers timezone: UTC, Europe/Moscow, etc... (all timezones listed here: https://en.wikipedia.org/wiki/List_of_tz_database_time_zones )
+timezone: "Europe/Moscow"
+
+# Transparent Huge Pages
+disable_thp: true  # or 'false'
+
+# Kernel parameters
+sysctl_set: true  # or 'false'
+# these parameters for example! Specify kernel options for your system
+sysctl_conf:
+  freeton_node:
+    - { name: "net.ipv6.conf.all.disable_ipv6", value: "1" }
+    - { name: "net.ipv6.conf.default.disable_ipv6", value: "1" }
+    - { name: "net.ipv6.conf.lo.disable_ipv6", value: "1" }
+
+# Max open file limit
+set_limits: true  # or 'false'
+soft_nofile: 65536
+hard_nofile: 200000
+
+# Rust parameters
+rustup_mirror : https://static.rust-lang.org/rustup/dist
+rustup_platform : x86_64-unknown-linux-gnu
+# Default rust version: stable|beta|nightly|<major.minor>|<major.minor.patch>
+rustup_default_toolchain: stable

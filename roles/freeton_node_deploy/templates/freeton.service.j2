@@ -1,0 +1,17 @@
+[Unit]
+Description=Freeton node
+Wants=network-online.target
+After=network-online.target
+
+[Service]
+ExecStart={{ freeton_node_bin_dir }}/ton_node -c {{ freeton_node_config_dir }}/
+ExecStop=/bin/kill -HUP $MAINPID
+WorkingDirectory={{ freeton_node_work_dir }}
+Restart=on-failure
+User={{ freeton_node_user }}
+Group={{ freeton_node_group }}
+StandardOutput=file:{{ freeton_node_log_dir }}/noded.log
+StandardError=file:{{ freeton_node_log_dir }}/noded.err
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,94 @@
+---
+
+- name: Create freeton dirs
+  file:
+    path: "{{ item }}"
+    state: directory
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+    mode: u=rwx,g=rw,o=r
+  loop:
+    - "{{ freeton_node_bin_dir }}"
+    - "{{ freeton_node_src_dir }}"
+    - "{{ freeton_node_work_dir }}"
+    - "{{ freeton_node_config_dir }}"
+    - "{{ freeton_node_contracts_dir }}"
+    - "{{ freeton_node_log_dir }}"
+    - "{{ freeton_node_tools_dir }}"
+
+- name: Install freeton compile dependencies
+  package:
+    name:
+      - git
+      - libssl-dev
+      - pkg-config
+      - build-essential
+      - autoconf
+      - automake
+      - m4
+      - cmake
+      - libtool
+      - clang
+      - tar
+      - gpg
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Download Rust init
+  get_url:
+    url: '{{ rustup_mirror }}/{{ rustup_platform }}/rustup-init'
+    dest: '/usr/local/bin/rustup-init'
+    mode: u=rwx,g=rx,o=
+
+- name: Install Rust
+  command: '/usr/local/bin/rustup-init -y --default-toolchain {{ rustup_default_toolchain }}'
+
+- name: Get freeton node sources
+  git:
+    repo: "{{ freeton_node_github_repo }}"
+    dest: "{{ freeton_node_src_dir }}/freeton_node"
+    version: "{{ freeton_node_github_commit_id }}"
+  register: freeton_node_sources
+
+- name: Get freeton node tools sources
+  git:
+    repo: "{{ freeton_node_tools_github_repo }}"
+    dest: "{{ freeton_node_src_dir }}/freeton_node_tools"
+    version: "{{ freeton_node_tools_github_commit_id }}"
+  register: freeton_node_tools_sources
+
+- name: Get tonos cli sources
+  git:
+    repo: "{{ tonos_cli_github_repo }}"
+    dest: "{{ freeton_node_src_dir }}/tonos_cli"
+    version: "{{ tonos_cli_github_commit_id }}"
+  register: tonos_cli_sources
+
+- name: Get tvm linker sources
+  git:
+    repo: "{{ tvm_linker_github_repo }}"
+    dest: "{{ freeton_node_src_dir }}/tvm_linker"
+    version: "{{ tvm_linker_github_commit_id }}"
+  register: tvm_linker_sources
+
+- name: Clear debug directory
+  file:
+    path: "{{ freeton_node_src_dir }}/debug"
+    state: absent
+
+- name: Build freeton node
+  command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/freeton_node/Cargo.toml --target-dir {{ freeton_node_src_dir }}'
+  when: freeton_node_sources.changed
+
+- name: Build freeton node tools
+  command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/freeton_node_tools/Cargo.toml --target-dir {{ freeton_node_src_dir }}'
+  when: freeton_node_tools_sources.changed
+
+- name: Build tonos cli
+  command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/tonos_cli/Cargo.toml --target-dir {{ freeton_node_src_dir }}'
+  when: tonos_cli_sources.changed
+
+- name: Build tvm linker
+  command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/tvm_linker/tvm_linker/Cargo.toml --target-dir {{ freeton_node_src_dir }}'
+  when: tvm_linker_sources.changed
