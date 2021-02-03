@@ -26,7 +26,7 @@ Ansible ([What is Ansible](https://www.ansible.com/resources/videos/quick-start-
 
 2. Go to the playbook directory
 
-`cd freeton-rust-node-ansible/`
+`cd freeton-rustnode-ansible/`
 
 3. Edit the inventory file
 
