@@ -1,6 +1,8 @@
 # Specify your hosts IP addresses
 [freeton_node]
 127.0.0.1 ansible_connection=local
+[monitoring_server]
+127.0.0.1 ansible_connection=local
 # Connection settings
 [all:vars]
 ansible_connection='ssh'

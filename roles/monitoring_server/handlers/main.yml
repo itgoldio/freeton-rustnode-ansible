@@ -1,0 +1,14 @@
+---
+
+- name: Restart docker service
+  systemd:
+    name: docker
+    enabled: true
+    state: restarted
+  listen: restart_docker
+
+- name: Restart docker-compose application
+  shell: /usr/local/bin/docker-compose down ; /usr/local/bin/docker-compose up -d
+  args:
+    chdir: /opt/monitoring_server
+  listen: restart_docker_compose

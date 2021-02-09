@@ -1,0 +1,44 @@
+#!/bin/bash -eE
+
+
+# path to this file
+export TON_ENV_FILE_PATH="{{ freeton_node_scripts }}/ton-env.sh"
+
+#set link to dapp
+# gql.custler.net   - fld network
+# net.ton.dev       - net (dev) network
+# main.ton.dev      - main (production) network
+# rustnet.ton.dev   - rust cup network
+export TON_DAPP="{{ ton_net_url }}"
+
+# path to TON OS command line tool
+# source code: https://github.com/tonlabs/tonos-cli 
+export TON_CLI="{{ freeton_node_tools_dir }}/tonos-cli"
+
+# path to rust validator console
+# source code: https://github.com/tonlabs/ton-labs-node-tools
+export TON_CONSOLE="{{ freeton_node_tools_dir }}/console"
+export TON_CONSOLE_CONFIG="{{ freeton_node_config_dir }}/console.json"
+
+
+#=================
+# validator wallet 
+
+export VALIDATOR_WALLET_ADDR_FILE=""
+
+# path to key file for wallet 
+export VALIDATOR_WALLET_PRV_KEY_1=""
+export VALIDATOR_WALLET_PRV_KEY_2=""
+#=================
+# depool
+
+export DEPOOL_ADDR_FILE=""
+export DEPOOL_PROXY_1_ADDR_FILE=""
+export DEPOOL_PROXY_2_ADDR_FILE=""
+
+
+#=================
+# smart contracts
+export TON_CONTRACT_SAFEMULTISIGWALLET_ABI="{{ freeton_node_contracts_dir }}/SafeMultisigWallet.abi.json"
+
+

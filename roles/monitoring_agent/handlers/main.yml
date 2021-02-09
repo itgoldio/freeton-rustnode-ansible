@@ -1,0 +1,9 @@
+---
+
+- name: Restart telegraf service
+  systemd:
+    daemon_reload: true
+    name: telegraf
+    enabled: true
+    state: restarted
+  listen: restart_telegraf

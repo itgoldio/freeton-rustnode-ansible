@@ -8,15 +8,23 @@ freeton_node_global_config_URL: "https://raw.githubusercontent.com/tonlabs/rustn
 # Get freeton node commit id: https://github.com/tonlabs/ton-labs-node/commits
 freeton_node_github_repo: "https://github.com/tonlabs/ton-labs-node.git"
 freeton_node_github_commit_id: "master"
+# Recompile binary without sources changes: false|true
+freeton_node_force_recompile: false
 # Get freeton node tools commit id: https://github.com/tonlabs/ton-labs-node-tools/commits"
 freeton_node_tools_github_repo: "https://github.com/tonlabs/ton-labs-node-tools.git"
 freeton_node_tools_github_commit_id: "master"
+# Recompile binary without sources changes: false|true
+freeton_node_tools_force_recompile: false
 # Get tonos cli commit id: https://github.com/tonlabs/tonos-cli/commits"
 tonos_cli_github_repo: "https://github.com/tonlabs/tonos-cli.git"
 tonos_cli_github_commit_id: "master"
+# Recompile binary without sources changes: false|true
+tonos_cli_force_recompile: false
 # Get TVM linker commit id: https://github.com/tonlabs/TVM-linker/commits"
 tvm_linker_github_repo: "https://github.com/tonlabs/TVM-linker.git"
 tvm_linker_github_commit_id: "master"
+# Recompile binary without sources changes: false|true
+tvm_linker_force_recompile: false
 
 # Default user and group names
 freeton_node_user: "freeton"
@@ -28,13 +36,16 @@ freeton_node_service_autostart: "yes"
 freeton_node_service_state: "restarted"
 
 # Specify freeton dirs
-freeton_node_bin_dir: "/opt/freeton"
+freeton_node_bin_dir: "/opt/freeton/bin"
 freeton_node_src_dir: "/usr/local/src/freeton"
 freeton_node_tools_dir: "/opt/freeton/tools"
-freeton_node_work_dir: "/var/lib/freeton"
+freeton_node_work_dir: "/opt/freeton/db"
 freeton_node_config_dir: "/etc/freeton"
-freeton_node_contracts_dir: "/etc/freeton/contracts"
-freeton_node_log_dir: "/var/log/freeton"
+freeton_node_contracts_dir: "/opt/freeton/contracts"
+freeton_node_log_dir: "/opt/freeton/logs"
+freeton_node_scripts: "/opt/freeton/scripts"
+freeton_node_election: "/opt/freeton/election"
+freeton_node_keys: "/home/freeton/ton-keys"
 
 # Freeton smart contracts
 freeton_node_contract_URLs:
@@ -45,7 +56,8 @@ freeton_node_contract_URLs:
   - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/safemultisig/SafeMultisigWallet.abi.json
   - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/safemultisig/SafeMultisigWallet.tvc
   - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/setcodemultisig/SetcodeMultisigWallet.abi.json
-  - https://github.com/tonlabs/ton-labs-contracts/blob/master/solidity/setcodemultisig/SetcodeMultisigWallet.tvc
+  - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/setcodemultisig/SetcodeMultisigWallet.tvc
+  - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/depool/DePoolProxy.tvc
 
 freeton_node_contract_URLs_fld:
   - https://github.com/FreeTON-Network/fld.ton.dev/raw/main/scripts/Marvin.abi.json

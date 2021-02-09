@@ -8,6 +8,7 @@
   vars_files:
     - vars/freeton_node.yml
     - vars/system.yml
+    - vars/monitoring.yml
   pre_tasks:
     - name: Checking distribution
       fail:
@@ -19,7 +20,19 @@
         msg: "{{ ansible_distribution_version }} of {{ ansible_distribution }} is not supported"
       when: ansible_distribution_version is version_compare(os_minimum_versions[ansible_distribution], '<')
   roles:
-   - system
-   - freeton_node_compile
-   - freeton_node_deploy
-    
+    - system
+    - freeton_node_compile
+    - freeton_node_deploy
+    - monitoring_agent
+  tags: [ "basic", "flush" ]
+
+- hosts: monitoring_server
+  become: true
+  become_method: sudo
+  gather_facts: true
+  any_errors_fatal: true
+  vars_files:
+    - vars/monitoring.yml
+  roles:
+    - monitoring_server
+  tags: [ "monitoring" ]
