@@ -1,20 +1,67 @@
 ---
+- name: Stats old db dir
+  stat:
+    path: /var/lib/freeton
+  register: old_db_dir
+
+- name: Move old db dir to present dir
+  block:
+    - name: Stop ton_node service
+      service:
+        name: freeton
+        state: stopped
+      notify: freeton_systemd
+    - name: Copy db dir
+      copy:
+        remote_src: true
+        src: /var/lib/freeton/
+        dest: "{{ freeton_node_work_dir }}"
+        owner: "{{ freeton_node_user }}"
+        group: "{{ freeton_node_group }}"
+    - name: Remove old db dir
+      file:
+        path: /var/lib/freeton
+        state: absent
+    - name: Copy old node bin
+      copy:
+        remote_src: true
+        src: /opt/freeton/ton_node
+        dest: "{{ freeton_node_bin_dir }}/ton_node"
+        owner: "{{ freeton_node_user }}"
+        group: "{{ freeton_node_group }}"
+        mode: u=rwx,g=rx,o=
+    - name: Fix tools dir mode
+      file:
+        state: directory
+        mode: u=rwx,g=rx,o=
+        path: "{{ freeton_node_tools_dir }}"
+        recurse: yes
+    - name: Remove old node bin
+      file:
+        path: /opt/freeton/ton_node
+        state: absent
+    - name: Remove old contracts dir
+      file:
+        path: /etc/freeton/contracts
+        state: absent
+  when: old_db_dir.stat.isdir is defined and old_db_dir.stat.isdir
+
 - name: Set ton net URL
   set_fact:
     ton_net_url: >
-      "{% if freeton_node_global_config_URL == 'https://raw.githubusercontent.com/tonlabs/main.ton.dev/master/configs/ton-global.config.json'
+      {% if freeton_node_global_config_URL == 'https://raw.githubusercontent.com/tonlabs/main.ton.dev/master/configs/ton-global.config.json'
       %}main.ton.dev{% elif freeton_node_global_config_URL == 'https://raw.githubusercontent.com/tonlabs/net.ton.dev/master/configs/net.ton.dev/ton-global.config.json'
       %}net.ton.dev{% elif freeton_node_global_config_URL == 'https://raw.githubusercontent.com/tonlabs/rustnet.ton.dev/main/configs/ton-global.config.json'
       %}rustnet.ton.dev{% elif freeton_node_global_config_URL == 'https://raw.githubusercontent.com/FreeTON-Network/fld.ton.dev/main/configs/fld.ton.dev/ton-global.config.json'
-      %}gql.custler.net{% endif %}"
+      %}gql.custler.net{% endif %}
 
 - name: Copy freeton node tools binaries
   copy:
-    src: "{{ freeton_node_src_dir }}/debug/{{ item }}"
-    dest: "{{ freeton_node_bin_dir }}/tools/{{ item }}"
+    src: "{{ freeton_node_src_dir }}/release/{{ item }}"
+    dest: "{{ freeton_node_tools_dir }}/{{ item }}"
     owner: "{{ freeton_node_user }}"
     group: "{{ freeton_node_group }}"
-    mode: u=rwx,g=rw,o=r
+    mode: u=rwx,g=rx,o=
     remote_src: yes
   loop:
     - console
@@ -23,37 +70,37 @@
     - keygen
     - print
     - zerostate
-  when: freeton_node_tools_sources.changed
+  when: freeton_node_tools_sources.changed or freeton_node_tools_force_recompile
 
 - name: Copy tonos cli binaries
   copy:
-    src: "{{ freeton_node_src_dir }}/debug/tonos-cli"
-    dest: "{{ freeton_node_bin_dir }}/tools/tonos-cli"
+    src: "{{ freeton_node_src_dir }}/release/tonos-cli"
+    dest: "{{ freeton_node_tools_dir }}/tonos-cli"
     owner: "{{ freeton_node_user }}"
     group: "{{ freeton_node_group }}"
-    mode: u=rwx,g=rw,o=r
+    mode: u=rwx,g=rx,o=
     remote_src: yes
-  when: tonos_cli_sources.changed
+  when: tonos_cli_sources.changed or tonos_cli_force_recompile
 
 - name: Copy tvm linker binaries
   copy:
-    src: "{{ freeton_node_src_dir }}/debug/tvm_linker"
-    dest: "{{ freeton_node_bin_dir }}/tools/tvm_linker"
+    src: "{{ freeton_node_src_dir }}/release/tvm_linker"
+    dest: "{{ freeton_node_tools_dir }}/tvm_linker"
     owner: "{{ freeton_node_user }}"
     group: "{{ freeton_node_group }}"
-    mode: u=rwx,g=rw,o=r
+    mode: u=rwx,g=rx,o=
     remote_src: yes
-  when: tvm_linker_sources.changed
+  when: tvm_linker_sources.changed or tvm_linker_force_recompile
 
 - name: Copy freeton node binaries
   copy:
-    src: "{{ freeton_node_src_dir }}/debug/ton_node"
+    src: "{{ freeton_node_src_dir }}/release/ton_node"
     dest: "{{ freeton_node_bin_dir }}"
     owner: "{{ freeton_node_user }}"
     group: "{{ freeton_node_group }}"
-    mode: u=rwx,g=rw,o=r
+    mode: u=rwx,g=rx,o=
     remote_src: yes
-  when: freeton_node_sources.changed
+  when: freeton_node_sources.changed or freeton_node_force_recompile
   notify: freeton_systemd
 
 - name: Get freeton global config
@@ -62,7 +109,7 @@
     dest: "{{ freeton_node_config_dir }}"
     owner: "{{ freeton_node_user }}"
     group: "{{ freeton_node_group }}"
-    mode: u=rw,g=rw,o=r
+    mode: u=rw,g=r,o=
   notify: freeton_systemd
 
 - name: Copy default freeton config
@@ -71,7 +118,7 @@
     dest: "{{ freeton_node_config_dir }}"
     owner: "{{ freeton_node_user }}"
     group: "{{ freeton_node_group }}"
-    mode: u=rw,g=rw,o=r
+    mode: u=rw,g=r,o=
     remote_src: yes
   notify: freeton_systemd
 
@@ -81,7 +128,7 @@
     dest: "{{ freeton_node_config_dir }}/log_cfg.yml"
     owner: "{{ freeton_node_user }}"
     group: "{{ freeton_node_group }}"
-    mode: u=rw,g=rw,o=r
+    mode: u=rw,g=r,o=
   notify: freeton_systemd
 
 - name: Copy freeton systemd service environment variables
@@ -105,6 +152,20 @@
   become: yes
   become_user: "{{ freeton_node_user }}"
 
+- name: Copy tonos-cli.conf.json to configs dir
+  copy:
+    src: "{{ freeton_node_tools_dir }}/tonos-cli.conf.json"
+    dest: "{{ freeton_node_config_dir }}/tonos-cli.conf.json"
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+    mode: u=rw,g=r,o=
+    remote_src: yes
+
+- name: Remove tonos-cli.conf.json in tools dir
+  file:
+    path: "{{ freeton_node_tools_dir }}/tonos-cli.conf.json"
+    state: absent
+
 - name: Generate keys
   shell: "./keygen > {{ freeton_node_config_dir }}/{{ ansible_hostname }}_client_keys.json"
   args:
@@ -116,7 +177,6 @@
 - name: Generate ton_node key config
   shell: "nohup {{ freeton_node_bin_dir}}/ton_node --configs {{ freeton_node_config_dir }} --ckey \"$(jq -c .public {{ freeton_node_config_dir }}/{{ ansible_hostname }}_client_keys.json)\" &"
   args:
-    chdir: "{{ freeton_node_work_dir }}"
     creates: "{{ freeton_node_config_dir }}/config.json"
   become: yes
   become_user: "{{ freeton_node_user }}"
@@ -130,6 +190,7 @@
 - name: Kill ton_node process
   shell: "pkill ton_node"
   when: ton_node_key_generated.changed
+  ignore_errors: true
 
 - name: Copy console_template.json
   copy:
@@ -138,7 +199,7 @@
     force: no
     owner: "{{ freeton_node_user }}"
     group: "{{ freeton_node_group }}"
-    mode: u=rw,g=rw,o=r
+    mode: u=rw,g=r,o=
 
 - name: Generate console.json config
   shell: "{{ item }}"
@@ -155,13 +216,32 @@
     path: "{{ freeton_node_config_dir }}/console_tmp.json"
     state: absent
 
+- name: Set correct keys mode
+  file:
+    path: "{{ item }}"
+    state: file
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+    mode: u=rw,g=,o=
+  loop:
+   - "{{ freeton_node_config_dir }}/{{ ansible_hostname }}_client_keys.json"
+   - "{{ freeton_node_config_dir }}/config.json"
+
+- name: Set correct keys mode
+  file:
+    path: "{{ freeton_node_config_dir }}/console.json"
+    state: file
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+    mode: u=rw,g=r,o=
+
 - name: Copy smart contracts
   get_url:
     url: "{{ item }}"
     dest: "{{ freeton_node_contracts_dir }}/"
     owner: "{{ freeton_node_user }}"
     group: "{{ freeton_node_group }}"
-    mode: u=rw,g=rw,o=r
+    mode: u=rw,g=r,o=
   loop: "{{ freeton_node_contract_URLs | list | unique }}"
 
 - name: Copy smart contracts for fld network
@@ -170,6 +250,6 @@
     dest: "{{ freeton_node_contracts_dir }}/"
     owner: "{{ freeton_node_user }}"
     group: "{{ freeton_node_group }}"
-    mode: u=rw,g=rw,o=r
+    mode: u=rw,g=r,o=
   loop: "{{ freeton_node_contract_URLs_fld | list | unique }}"
-  when: ton_net_url == 'gql.custler.net'
+  when: freeton_node_global_config_URL == "https://raw.githubusercontent.com/FreeTON-Network/fld.ton.dev/main/configs/fld.ton.dev/ton-global.config.json"

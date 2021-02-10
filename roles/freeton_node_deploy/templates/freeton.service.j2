@@ -12,6 +12,8 @@ User={{ freeton_node_user }}
 Group={{ freeton_node_group }}
 StandardOutput=file:{{ freeton_node_log_dir }}/noded.log
 StandardError=file:{{ freeton_node_log_dir }}/noded.err
+LimitNOFILE=infinity
+LimitNPROC=infinity
 
 [Install]
 WantedBy=multi-user.target

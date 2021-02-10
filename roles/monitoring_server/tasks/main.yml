@@ -1,0 +1,98 @@
+---
+
+- name: Install prerequisites for Docker repository
+  package:
+    name:
+    - apt-transport-https
+    - ca-certificates
+    - curl
+    - gnupg2
+    - software-properties-common
+    - jq
+    - python3-passlib
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Add docker apt key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    state: present
+
+- name: Add docker apt repo
+  apt_repository:
+    repo: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} stable"
+    state: present
+    update_cache: yes
+  
+- name: Install docker and it's dependencies
+  package:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+    state: present
+  notify: restart_docker
+
+- name: Check if docker-compose exists
+  stat:
+    path: /usr/local/bin/docker-compose
+  register: docker_compose_status
+
+- name: Get last version of docker-compose
+  shell: curl -s https://api.github.com/repos/docker/compose/releases/latest | jq .name -r
+  args:
+    warn: no
+  register: docker_compose_version
+  when: not docker_compose_status.stat.exists
+
+- name: Install docker-compose
+  get_url: 
+    url : https://github.com/docker/compose/releases/download/{{ docker_compose_version.stdout }}/docker-compose-Linux-x86_64
+    dest: /usr/local/bin/docker-compose
+    mode: 'u+x,g+x'
+  when: not docker_compose_status.stat.exists
+
+- name: Create monitoring server dirs
+  file:
+    path: "{{ item }}"
+    state: directory
+    mode: u=rwx,g=rw,o=
+  loop:
+    - "/opt/monitoring_server"
+
+- name: Copy monitoring server docker-compose file
+  template:
+    src: 'docker-compose.yml.j2'
+    dest: '/opt/monitoring_server/docker-compose.yaml'
+  notify: restart_docker_compose
+
+- name: Copy grafana config files
+  copy:
+    src: "{{ item }}"
+    dest: "/opt/monitoring_server/"
+    mode: u=rw,g=r,o=
+    owner: "472"
+    group: root
+  notify: restart_docker_compose
+  loop:
+    - grafana-provisioning
+
+- name: Copy grafana datasource config
+  template:
+    src: "datasource.yml.j2"
+    dest: "/opt/monitoring_server/grafana-provisioning/datasources/datasource.yml"
+    owner: "472"
+    group: root
+  notify: restart_docker_compose
+
+- name: Set chronograf user credentionals
+  htpasswd:
+    path: /opt/monitoring_server/.htpasswd
+    name: "{{ CHRONOGRAF_USERNAME }}"
+    password: "{{ CHRONOGRAF_PASSWORD }}"
+    owner: root
+    mode: 0640
+  notify: restart_docker_compose
+  vars:
+    ansible_python_interpreter: python3

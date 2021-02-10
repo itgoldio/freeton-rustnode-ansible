@@ -6,8 +6,9 @@
     state: directory
     owner: "{{ freeton_node_user }}"
     group: "{{ freeton_node_group }}"
-    mode: u=rwx,g=rw,o=r
+    mode: u=rwx,g=rx,o=
   loop:
+    - "/opt/freeton"
     - "{{ freeton_node_bin_dir }}"
     - "{{ freeton_node_src_dir }}"
     - "{{ freeton_node_work_dir }}"
@@ -15,6 +16,24 @@
     - "{{ freeton_node_contracts_dir }}"
     - "{{ freeton_node_log_dir }}"
     - "{{ freeton_node_tools_dir }}"
+    - "{{ freeton_node_scripts }}"
+    - "{{ freeton_node_election }}"
+
+- name: Create freeton keys dir
+  file:
+    path: "{{ freeton_node_keys }}"
+    state: directory
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+    mode: u=rwx,g=,o=
+
+- name: Add {{ freeton_node_scripts }} to PATH env
+  lineinfile:
+    dest: /etc/environment
+    state: present
+    backrefs: yes
+    regexp: 'PATH=(["]*)((?!.*?{{ freeton_node_scripts }}:{{ freeton_node_tools_dir }}).*?)(["]*)$'
+    line: "PATH=\\1\\2:{{ freeton_node_scripts }}:{{ freeton_node_tools_dir }}\\3"
 
 - name: Install freeton compile dependencies
   package:
@@ -78,17 +97,33 @@
     state: absent
 
 - name: Build freeton node
-  command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/freeton_node/Cargo.toml --target-dir {{ freeton_node_src_dir }}'
-  when: freeton_node_sources.changed
+  block:
+    - name: Update repo deps | freeton node
+      command: '{{ ansible_env.HOME }}/.cargo/bin/cargo update --manifest-path {{ freeton_node_src_dir }}/freeton_node/Cargo.toml'
+    - name: Build repo | freeton node
+      command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/freeton_node/Cargo.toml --target-dir {{ freeton_node_src_dir }} --release'
+  when: freeton_node_sources.changed or freeton_node_force_recompile
 
 - name: Build freeton node tools
-  command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/freeton_node_tools/Cargo.toml --target-dir {{ freeton_node_src_dir }}'
-  when: freeton_node_tools_sources.changed
+  block:
+    - name: Update repo deps | node tools
+      command: '{{ ansible_env.HOME }}/.cargo/bin/cargo update --manifest-path {{ freeton_node_src_dir }}/freeton_node_tools/Cargo.toml'
+    - name: Build repo | node tools
+      command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/freeton_node_tools/Cargo.toml --target-dir {{ freeton_node_src_dir }} --release'
+  when: freeton_node_tools_sources.changed or freeton_node_tools_force_recompile
 
 - name: Build tonos cli
-  command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/tonos_cli/Cargo.toml --target-dir {{ freeton_node_src_dir }}'
-  when: tonos_cli_sources.changed
+  block:
+    - name: Update repo deps | tonos cli
+      command: '{{ ansible_env.HOME }}/.cargo/bin/cargo update --manifest-path {{ freeton_node_src_dir }}/tonos_cli/Cargo.toml'
+    - name: Build repo | tonos cli
+      command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/tonos_cli/Cargo.toml --target-dir {{ freeton_node_src_dir }} --release'
+  when: tonos_cli_sources.changed or tonos_cli_force_recompile
 
 - name: Build tvm linker
-  command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/tvm_linker/tvm_linker/Cargo.toml --target-dir {{ freeton_node_src_dir }}'
-  when: tvm_linker_sources.changed
+  block:
+    - name: Update repo deps | tvm linker
+      command: '{{ ansible_env.HOME }}/.cargo/bin/cargo update --manifest-path {{ freeton_node_src_dir }}/tvm_linker/tvm_linker/Cargo.toml'
+    - name: Build repo | tvm linker
+      command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/tvm_linker/tvm_linker/Cargo.toml --target-dir {{ freeton_node_src_dir }} --release'
+  when: tvm_linker_sources.changed or tvm_linker_force_recompile

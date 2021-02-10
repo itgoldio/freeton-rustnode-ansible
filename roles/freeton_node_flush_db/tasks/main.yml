@@ -1,0 +1,17 @@
+---
+
+- name: Remove generated earlier configs and flush db
+  block:
+    - name: Stop ton_node service
+      service:
+        name: freeton
+        state: stopped
+    - name: Delete old configs and flush db
+      file:
+        path: "{{ item }}"
+        state: absent
+      loop:
+        - "{{ freeton_node_config_dir }}/config.json"
+        - "{{ freeton_node_config_dir }}/console.json"
+        - "{{ freeton_node_config_dir }}/console_config.json"
+        - "{{ freeton_node_work_dir }}/node_db"

@@ -1,0 +1,91 @@
+---
+
+- name: Add telegraf apt key
+  apt_key:
+    url: https://repos.influxdata.com/influxdb.key
+    state: present
+
+- name: Add telegraf apt repo
+  apt_repository:
+    repo: "deb [arch=amd64] https://repos.influxdata.com/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} stable"
+    state: present
+    update_cache: yes
+  
+- name: Install telegraf and it's dependencies
+  package:
+    name:
+      - telegraf
+    state: present
+  notify: restart_telegraf
+
+- name: Add telegraf user to freeton group
+  user:
+    name: telegraf
+    groups: "{{ freeton_node_group }}"
+    append: yes
+  ignore_errors: yes
+
+- name: Copy default telegraf config
+  copy:
+    src: "telegraf.conf"
+    dest: "/etc/telegraf/telegraf.conf"
+    owner: telegraf
+    group: telegraf
+  notify: restart_telegraf
+
+- name: Copy telegraf env config
+  template:
+    src: "telegraf.j2"
+    dest: "/etc/default/telegraf"
+    owner: telegraf
+    group: telegraf
+  notify: restart_telegraf
+
+- name: Copy telegraf freeton config
+  template:
+    src: "telegraf_freeton.conf.j2"
+    dest: "/etc/telegraf/telegraf.d/telegraf_freeton.conf"
+  notify: restart_telegraf
+
+- name: Fix telegraf dirs own
+  file:
+    path: "{{ item }}"
+    state: directory
+    recurse: yes
+    owner: telegraf
+    group: telegraf
+  loop:
+    - "/etc/telegraf"
+
+- name: Stats old env file
+  stat:
+    path: "{{ freeton_node_scripts }}/ton-env"
+  register: old_env_file
+
+- name: Flush monitoring scripts directory
+  file:
+    state: "{{ item }}"
+    path: "{{ freeton_node_scripts }}/"
+    mode: u=rwx,g=rx,o=
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+  loop:
+    - absent
+    - directory
+  when: old_env_file.stat.isreg is defined
+  
+- name: Copy ton-env file
+  template:
+    src: "ton-env.j2"
+    dest: "{{ freeton_node_scripts }}/ton-env.sh"
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+    mode: u=rwx,g=rx,o=
+
+- name: Copy monitoring scripts
+  copy:
+    src: "scripts/"
+    dest: "{{ freeton_node_scripts }}/"
+    mode: u=rwx,g=rx,o=
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"

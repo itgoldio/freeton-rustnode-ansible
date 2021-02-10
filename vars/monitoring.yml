@@ -1,0 +1,14 @@
+# InfluxDB database name
+INFLUXDB_DB_NAME: telegraf
+
+# Agents will connect to the monitoring server with this credentionals
+INFLUXDB_USERNAME: freeton
+INFLUXDB_PASSWORD: password
+
+# Creds to access grafana web-interface
+GRAFANA_USERNAME: freeton
+GRAFANA_PASSWORD: password
+
+# Creds to acees chronograf web-interface
+CHRONOGRAF_USERNAME: freeton
+CHRONOGRAF_PASSWORD: password

@@ -30,18 +30,26 @@ Ansible ([What is Ansible](https://www.ansible.com/resources/videos/quick-start-
 
 3. Edit the inventory file
 
-###### Specify the IP addresses in freeton_node section and connection settings (`ansible_user`, `ansible_ssh_pass` ...) for your environment. If you run  the playbook locally, don't change the default settings.
+###### Specify the IP addresses in freeton_node and monitoring_server section and connection settings (`ansible_user`, `ansible_ssh_pass` ...) for your environment. If you run  the playbook locally, don't change the default settings.
 ###### Example:
-`[freeton_node]`\
-`11.22.33.44 ansible_user='root' ansible_ssh_pass='secretpassword'`\
-`22.33.44.55 ansible_user='user' ansible_ssh_pass='supersecretpassword' ansible_become=true`
 
 `vim inventory`
 
-4. Edit the variable files vars/[freeton_node.yml](./vars/freeton_node.yml) and vars/[system.yml](./vars/system.yml)
+`[freeton_node]`\
+`11.22.33.44 ansible_user='root' ansible_ssh_pass='secretpassword'`\
+`22.33.44.55 ansible_user='user' ansible_ssh_pass='supersecretpassword' ansible_become=true`\
+`[monitoring_server]`\
+`33.44.55.66`
+
+###### There is no need to specify more than one monitoring server. All agents will connect only to the first one.
+
+4. Edit the variable files vars/[freeton_node.yml](./vars/freeton_node.yml), vars/[system.yml](./vars/system.yml) and vars/[monitoring.yml](./vars/monitoring.yml)
 
 `vim vars/freeton_node.yml`\
-`vim vars/system.yml`
+`vim vars/system.yml`\
+`vim vars/monitoring.yml`
+
+### Be careful and don't forget to change standard passwords in [monitoring.yml](./vars/monitoring.yml) file.
 
 5. Run playbook:
 
@@ -51,9 +59,13 @@ Ansible ([What is Ansible](https://www.ansible.com/resources/videos/quick-start-
 
 `ansible-playbook deploy_freeton_node.yml -c local`
 
+##### To skip monitoring server installation role, specify '-t basic'
+
+`ansible-playbook deploy_freeton_node.yml -c local -t basic`
+
 ---
 ## Variables
-See the vars/[freeton_node.yml](./vars/freeton_node.yml) and vars/[system.yml](./vars/system.yml) files for more details.
+See the vars/[freeton_node.yml](./vars/freeton_node.yml), vars/[system.yml](./vars/system.yml) and vars/[monitoring.yml](./vars/monitoring.yml) files for more details.
 
 ---
 ## Usage
@@ -63,13 +75,67 @@ You can control the running status of the freeton node using systemd commands:
 `systemctl stop freeton` \
 `systemctl start freeton`
 
-Freeton node stores logs in `/var/log/freeton` directory (change this by specifying freeton_node_log_dir var in vars/[freeton_node.yml](./vars/freeton_node.yml)).
+Freeton node stores logs in `/opt/freeton/logs` directory (change this by specifying freeton_node_log_dir var in vars/[freeton_node.yml](./vars/freeton_node.yml)).
 You can change log rules in file roles/freeton_node_deploy/freeton_node_deploy/[log_cfg.yml.j2](./roles/freeton_node_deploy/templates/log_cfg.yml.j2)
 
-Binary files located in `/opt/freeton`, all other locations stored in vars/[freeton_node.yml](./vars/freeton_node.yml)
+Binary files located in `/opt/freeton/bin`, all other locations stored in vars/[freeton_node.yml](./vars/freeton_node.yml)
+
+
+Monitoring services will start at the host specified in monitoring_server inventory section.
+You can access Grafana the monitoring observability solution with pre-installed dashboards via a web-browser:
+
+`http://<monitoring_server_ip>:3000/`
+
+Also you can access Chronograf - InfluxDB data observation tool - via a web-browser:
+
+`http://<monitoring_server_ip>:8888/`
+
+---
+## Extras
+When you change global network config, for example, you running rustnet.ton.dev network, and want to change it to fld.ton.dev. You should change freeton_node_global_config_URL variable in vars/[freeton_node.yml](./vars/freeton_node.yml) and run playbook again with tag 'flush' in addition with tag 'basic':
+
+`ansible-playbook deploy_freeton_node.yml -c local -t basic,flush`
+
+##### Do not use flush tag without any other tags
+---
+## Scripts
+All scripts will be added to PATH for freeton user. Monitoring use several scripts.
+### [ton-env.sh](./roles/monitoring_agent/files/../templates/ton-env.j2)
+Script main script. It store all shared variables that used in other scripts. Please, fill it first.
+### [ton-check-env.sh](./roles/monitoring_agent/files/scripts/ton-check-env.sh)
+Script system script. It check that ton-env.sh fill correct. Don't use it directly.
+### [ton-depool-balance.sh](./roles/monitoring_agent/files/scripts/ton-depool-balance.sh)
+Script show depool balance in nanotokens.
+### [ton-depool-proxy-1-balance.sh](./roles/monitoring_agent/files/scripts/ton-depool-proxy-1-balance.sh)
+Script show depool proxy 1 balance in nanotokens.
+### [ton-depool-proxy-2-balance.sh](./roles/monitoring_agent/files/scripts/ton-depool-proxy-2-balance.sh)
+Script show depool proxy 2 balance in nanotokens.
+### [ton-depool-ticktok.sh](./roles/monitoring_agent/files/scripts/ton-depool-ticktok.sh)
+Script send ticktock command from wallet to depool.
+### [ton-depool-validation-request.sh](./roles/monitoring_agent/files/scripts/ton-depool-validation-request.sh)
+Validator script for elections through depool.
+### [ton-election-date-end.sh](./roles/monitoring_agent/files/scripts/ton-election-date-end.sh)
+Script return date end election in unix time or return -1 if election isn't active.
+### [ton-election-date-start.sh](./roles/monitoring_agent/files/scripts/ton-election-date-start.sh)
+Script return date started election in unix time or return -1 if election isn't active.
+### [ton-election-state.sh](./roles/monitoring_agent/files/scripts/ton-election-state.sh)
+Script return "ACTIVE" if elecetion is active or "STOPPED" otherwise
+### [ton-node-diff.sh](./roles/monitoring_agent/files/scripts/ton-node-diff.sh)
+Script return time diff in unix time for local node or "-1" if console or node doesn't work
+### [ton-node-participant-state.sh](./roles/monitoring_agent/files/scripts/ton-node-participant-state.sh)
+Script return "ACTIVE" if node already in participants list. It return "NOT_FOUND" if election is active, but node absent in participants list. Script return "UNKNOWN" if election stopped.
+### [ton-wallet-balance.sh](./roles/monitoring_agent/files/scripts/ton-wallet-balance.sh)
+Script show wallet balance in nanotokens.
+### [ton-wallet-transaction-confirm.sh](./roles/monitoring_agent/files/scripts/ton-wallet-transaction-confirm.sh)
+Script find unsigned transaction from wallet to depool and signet it use secondary key. It use ton-env.sh vars by default. You can send wallet addr and depool addr directly as arguments.
+### [ton-wallet-transaction-count.sh](./roles/monitoring_agent/files/scripts/ton-wallet-transaction-count.sh)
+Script show count unsigned transaction from wallet to depool.
 
 ---
 ## Support
 We can help you in telegram chats
-RU: https://t.me/itgoldio_support_ru
-EN: https://t.me/itgoldio_support_en
+- RU: https://t.me/itgoldio_support_ru
+- EN: https://t.me/itgoldio_support_en
+
+## Changelog
+Here: [changelog.md](./changelog.md)
