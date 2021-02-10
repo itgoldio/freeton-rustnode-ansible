@@ -66,9 +66,9 @@ echo "INFO: eclection is active"
 ## region: CHECK ALREADY PARTICIPANT
 ##=================
 
-already completed request for election
+#already completed request for election
 PARTICIPANT_STATE=$(ton-node-participant-state.sh)
-if [ $PARTICIPANT_STATE == "ACTIVE"]
+if [ $PARTICIPANT_STATE == "ACTIVE" ]
    then
         echo "INFO: already in participants list"
         exit 0
@@ -99,8 +99,6 @@ if [ ! -f $TON_ELECTION_SUBFOLDER/$TON_ELECTION_PROXY_FILE_NAME ]; then
    TON_DEPOOL_EVENTS=$($TON_CLI --url $TON_DAPP depool --addr $DEPOOL_ADDR  events)
    echo "$TON_DEPOOL_EVENTS" > "$TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_EVENTS_FILE_NAME"
 
-   echo $ELECTIONS_DATE
-   echo "$TON_DEPOOL_EVENTS"
    TON_PROXY=$(echo "$TON_DEPOOL_EVENTS" | grep $ELECTIONS_DATE | jq ".proxy")
    if [ -z $TON_PROXY  ]; then
       echo "ERROR: can't find proxy, see events in $TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_EVENTS_FILE_NAME"

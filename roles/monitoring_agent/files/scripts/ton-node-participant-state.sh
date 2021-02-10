@@ -42,8 +42,7 @@ do
             echo "ACTIVE"
             exit
       fi
-    fi
-fi
+   fi
 done
 
 echo "NOT_FOUND"
