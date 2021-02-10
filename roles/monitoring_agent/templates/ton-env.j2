@@ -20,25 +20,27 @@ export TON_CLI="{{ freeton_node_tools_dir }}/tonos-cli"
 export TON_CONSOLE="{{ freeton_node_tools_dir }}/console"
 export TON_CONSOLE_CONFIG="{{ freeton_node_config_dir }}/console.json"
 
+export TON_NODE_CONFIG="/etc/freeton/config.json"
 
-#=================
+
 # validator wallet 
-
+#=================
 export VALIDATOR_WALLET_ADDR_FILE=""
 
 # path to key file for wallet 
 export VALIDATOR_WALLET_PRV_KEY_1=""
 export VALIDATOR_WALLET_PRV_KEY_2=""
-#=================
-# depool
 
+# depool
+#=================
 export DEPOOL_ADDR_FILE=""
 export DEPOOL_PROXY_1_ADDR_FILE=""
 export DEPOOL_PROXY_2_ADDR_FILE=""
 
-
-#=================
 # smart contracts
+#=================
 export TON_CONTRACT_SAFEMULTISIGWALLET_ABI="{{ freeton_node_contracts_dir }}/SafeMultisigWallet.abi.json"
 
-
+#election
+#=================
+export TON_ELECTION_FOLDER="/opt/freeton/election"

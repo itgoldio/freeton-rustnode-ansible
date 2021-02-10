@@ -35,7 +35,7 @@ do
       
       TON_ADNL_KEY_FROM_ELECTOR=$($TON_CLI --url $TON_DAPP runget $ELECTOR_ADDR participant_list_extended | grep "$TON_ADNL_KEY")
 
-      if [ -z $TON_ADNL_KEY_FROM_ELECTOR ]; then
+      if [ -z "$TON_ADNL_KEY_FROM_ELECTOR" ]; then
             echo "NOT_FOUND"
             exit
       else
