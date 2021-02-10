@@ -92,10 +92,11 @@ Also you can access Chronograf - InfluxDB data observation tool - via a web-brow
 
 ---
 ## Extras
-When you change global network config, for example, you running rustnet.ton.dev network, and want to change it to fld.ton.dev. You should change freeton_node_global_config_URL variable in vars/[freeton_node.yml](./vars/freeton_node.yml) and run playbook again with tag 'flush':
+When you change global network config, for example, you running rustnet.ton.dev network, and want to change it to fld.ton.dev. You should change freeton_node_global_config_URL variable in vars/[freeton_node.yml](./vars/freeton_node.yml) and run playbook again with tag 'flush' in addition with tag 'basic':
 
-`ansible-playbook deploy_freeton_node.yml -c local -t flush`
+`ansible-playbook deploy_freeton_node.yml -c local -t basic,flush`
 
+##### Do not use flush tag without any other tags
 ---
 ## Scripts
 All scripts will be added to PATH for freeton user. Monitoring use several scripts.

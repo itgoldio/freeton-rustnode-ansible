@@ -3,6 +3,16 @@
 - hosts: freeton_node
   become: true
   become_method: sudo
+  any_errors_fatal: true
+  vars_files:
+    - vars/freeton_node.yml
+  roles:
+    - freeton_node_flush_db
+  tags: [ "never", "flush" ]
+
+- hosts: freeton_node
+  become: true
+  become_method: sudo
   gather_facts: true
   any_errors_fatal: true
   vars_files:
@@ -24,7 +34,7 @@
     - freeton_node_compile
     - freeton_node_deploy
     - monitoring_agent
-  tags: [ "basic", "flush" ]
+  tags: [ "basic" ]
 
 - hosts: monitoring_server
   become: true

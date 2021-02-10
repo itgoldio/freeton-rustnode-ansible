@@ -46,24 +46,6 @@
         state: absent
   when: old_db_dir.stat.isdir is defined and old_db_dir.stat.isdir
 
-- name: Remove generated earlier configs and flush db
-  block:
-    - name: Stop ton_node service
-      service:
-        name: freeton
-        state: stopped
-      notify: freeton_systemd
-    - name: Delete old configs and flush db
-      file:
-        path: "{{ item }}"
-        state: absent
-      loop:
-        - "{{ freeton_node_config_dir }}/config.json"
-        - "{{ freeton_node_config_dir }}/console.json"
-        - "{{ freeton_node_config_dir }}/console_config.json"
-        - "{{ freeton_node_work_dir }}/node_db"
-  tags: never, flush
-
 - name: Set ton net URL
   set_fact:
     ton_net_url: >
@@ -169,6 +151,20 @@
     chdir: "{{ freeton_node_tools_dir }}"
   become: yes
   become_user: "{{ freeton_node_user }}"
+
+- name: Copy tonos-cli.conf.json to configs dir
+  copy:
+    src: "{{ freeton_node_tools_dir }}/tonos-cli.conf.json"
+    dest: "{{ freeton_node_config_dir }}/tonos-cli.conf.json"
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+    mode: u=rw,g=r,o=
+    remote_src: yes
+
+- name: Remove tonos-cli.conf.json in tools dir
+  file:
+    path: "{{ freeton_node_tools_dir }}/tonos-cli.conf.json"
+    state: absent
 
 - name: Generate keys
   shell: "./keygen > {{ freeton_node_config_dir }}/{{ ansible_hostname }}_client_keys.json"

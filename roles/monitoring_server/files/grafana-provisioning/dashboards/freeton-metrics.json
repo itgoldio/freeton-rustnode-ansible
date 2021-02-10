@@ -585,8 +585,8 @@
     "to": "now"
   },
   "timepicker": {},
-  "timezone": "",
+  "timezone": "browser",
   "title": "Freeton metrics",
-  "uid": "--xFreetonx",
-  "version": 3
+  "uid": "ton-2",
+  "version": 5
 }
