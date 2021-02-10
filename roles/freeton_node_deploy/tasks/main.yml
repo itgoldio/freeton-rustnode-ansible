@@ -29,6 +29,13 @@
         dest: "{{ freeton_node_bin_dir }}/ton_node"
         owner: "{{ freeton_node_user }}"
         group: "{{ freeton_node_group }}"
+        mode: u=rwx,g=rx,o=
+    - name: Fix tools dir mode
+      file:
+        state: directory
+        mode: u=rwx,g=rx,o=
+        path: "{{ freeton_node_tools_dir }}"
+        recurse: yes
     - name: Remove old node bin
       file:
         path: /opt/freeton/ton_node
@@ -249,4 +256,4 @@
     group: "{{ freeton_node_group }}"
     mode: u=rw,g=r,o=
   loop: "{{ freeton_node_contract_URLs_fld | list | unique }}"
-  when: ton_net_url == 'gql.custler.net'
+  when: freeton_node_global_config_URL == "https://raw.githubusercontent.com/FreeTON-Network/fld.ton.dev/main/configs/fld.ton.dev/ton-global.config.json"

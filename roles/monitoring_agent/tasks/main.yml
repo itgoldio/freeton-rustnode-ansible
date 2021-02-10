@@ -57,6 +57,23 @@
   loop:
     - "/etc/telegraf"
 
+- name: Stats old env file
+  stat:
+    path: "{{ freeton_node_scripts }}/ton-env"
+  register: old_env_file
+
+- name: Flush monitoring scripts directory
+  file:
+    state: "{{ item }}"
+    path: "{{ freeton_node_scripts }}/"
+    mode: u=rwx,g=rx,o=
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+  loop:
+    - absent
+    - directory
+  when: old_env_file.stat.isreg is defined
+  
 - name: Copy ton-env file
   template:
     src: "ton-env.j2"
@@ -64,7 +81,7 @@
     owner: "{{ freeton_node_user }}"
     group: "{{ freeton_node_group }}"
     mode: u=rwx,g=rx,o=
-  
+
 - name: Copy monitoring scripts
   copy:
     src: "scripts/"
