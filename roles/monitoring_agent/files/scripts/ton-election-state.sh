@@ -16,8 +16,16 @@ ELECTIONS_START=$($TON_CLI --url $TON_DAPP runget $ELECTOR_ADDR active_election_
 if (( $ELECTIONS_START == 0 ));
     then
         echo "STOPPED";
-    else
-        echo "ACTIVE";
+        exit
 fi
+
+if (( $ELECTIONS_START > 0 ));
+    then
+        echo "ACTIVE";
+        exit
+fi
+
+echo "ERROR";
+
 
 

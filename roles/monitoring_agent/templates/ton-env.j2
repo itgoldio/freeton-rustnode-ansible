@@ -20,22 +20,36 @@ export TON_CLI="{{ freeton_node_tools_dir }}/tonos-cli"
 export TON_CONSOLE="{{ freeton_node_tools_dir }}/console"
 export TON_CONSOLE_CONFIG="{{ freeton_node_config_dir }}/console.json"
 
-export TON_NODE_CONFIG="/etc/freeton/config.json"
+export TON_NODE_CONFIG="{{ freeton_node_config_dir }}/config.json"
+
+# directory for keys and addresses
+#=================
+export KEYS_DIR="{{ freeton_node_keys }}"
 
 
 # validator wallet 
 #=================
-export VALIDATOR_WALLET_ADDR_FILE=""
+export VALIDATOR_WALLET_ADDR_FILE_NAME="$HOSTNAME.addr"
+if [ -f $KEYS_DIR/$VALIDATOR_WALLET_ADDR_FILE_NAME ] ; then export VALIDATOR_WALLET_ADDR=`cat $KEYS_DIR/$VALIDATOR_WALLET_ADDR_FILE_NAME` ; fi
 
 # path to key file for wallet 
-export VALIDATOR_WALLET_PRV_KEY_1=""
-export VALIDATOR_WALLET_PRV_KEY_2=""
+export VALIDATOR_WALLET_PRV_KEY_1_FILE_NAME="msig.keys.json"
+if [ -f $KEYS_DIR/$VALIDATOR_WALLET_PRV_KEY_1_FILE_NAME ] ; then export VALIDATOR_WALLET_PRV_KEY_1=$KEYS_DIR/$VALIDATOR_WALLET_PRV_KEY_1_FILE_NAME ; fi
+
+export VALIDATOR_WALLET_PRV_KEY_2_FILE_NAME="msig2.keys.json"
+if [ -f $KEYS_DIR/$VALIDATOR_WALLET_PRV_KEY_2_FILE_NAME ] ; then export VALIDATOR_WALLET_PRV_KEY_2=$KEYS_DIR/$VALIDATOR_WALLET_PRV_KEY_2_FILE_NAME ; fi
+
+
 
 # depool
 #=================
-export DEPOOL_ADDR_FILE=""
-export DEPOOL_PROXY_1_ADDR_FILE=""
-export DEPOOL_PROXY_2_ADDR_FILE=""
+export DEPOOL_ADDR_FILE_NAME="depool.addr"
+if [ -f $KEYS_DIR/$DEPOOL_ADDR_FILE_NAME ] ; then export DEPOOL_ADDR=`cat $KEYS_DIR/$DEPOOL_ADDR_FILE_NAME` ; fi
+
+export DEPOOL_TICK_ADDR_FILE_NAME="Tik.addr"
+if [ -f $KEYS_DIR/$DEPOOL_TICK_ADDR_FILE_NAME ] ; then export TIK_ADDR=`cat $KEYS_DIR/$DEPOOL_TICK_ADDR_FILE_NAME` ; fi
+export DEPOOL_TICK_KEY_FILE_NAME="Tik.keys.json"
+if [ -f $KEYS_DIR/$DEPOOL_TICK_KEY_FILE_NAME ] ; then export TIK_PRV_KEY=$KEYS_DIR/$DEPOOL_TICK_KEY_FILE_NAME ; fi
 
 # smart contracts
 #=================
@@ -43,4 +57,4 @@ export TON_CONTRACT_SAFEMULTISIGWALLET_ABI="{{ freeton_node_contracts_dir }}/Saf
 
 #election
 #=================
-export TON_ELECTION_FOLDER="/opt/freeton/election"
+export TON_ELECTION_FOLDER="{{ freeton_node_election }}"

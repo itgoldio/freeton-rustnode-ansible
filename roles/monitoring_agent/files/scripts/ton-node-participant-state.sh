@@ -3,6 +3,13 @@
 # export ton environments
 . ton-env.sh
 
+ton-check-env.sh TON_CLI
+ton-check-env.sh TON_DAPP
+ton-check-env.sh TON_NODE_CONFIG
+ton-check-env.sh TON_CONSOLE
+ton-check-env.sh TON_CONSOLE_CONFIG
+
+
 ELECTION_STATE=$(ton-election-state.sh)
 if [ $ELECTION_STATE != "ACTIVE" ];
     then

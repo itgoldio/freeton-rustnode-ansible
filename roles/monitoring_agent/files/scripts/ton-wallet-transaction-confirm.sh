@@ -8,30 +8,15 @@ ton-check-env.sh TON_CLI
 ton-check-env.sh TON_DAPP
 ton-check-env.sh TON_CONTRACT_SAFEMULTISIGWALLET_ABI
 
-#set wallet and depool addr
-VALIDATOR_WALLET_ADDR=""
-DEPOOL_ADDR=""
-
-if [ $# != 2 ];then
+if [ $# != 3 ];then
    
-   ton-check-env.sh VALIDATOR_WALLET_ADDR_FILE
-   VALIDATOR_WALLET_ADDR=$(cat $VALIDATOR_WALLET_ADDR_FILE)
-   if [ -z "${VALIDATOR_WALLET_ADDR}" ]; then
-       echo "Warning, send argument with wallet addr and dapp addr or write it data to ton-env.sh"
-       exit 1
-   fi
-
-   ton-check-env.sh DEPOOL_ADDR_FILE
-   DEPOOL_ADDR=$(cat $DEPOOL_ADDR_FILE)
-
-   if [ -z "${DEPOOL_ADDR}" ]; then
-       echo "Warning, send argument with wallet addr and dapp addr or write it data to ton-env.sh"
-      exit 1
-   fi
-
+   ton-check-env.sh VALIDATOR_WALLET_ADDR
+   ton-check-env.sh DEPOOL_ADDR
+   ton-check-env.sh VALIDATOR_WALLET_PRV_KEY_2
 else
    VALIDATOR_WALLET_ADDR=$1
    DEPOOL_ADDR=$2
+   VALIDATOR_WALLET_PRV_KEY_2=$3
 fi
 
 TRANSACTIONS="$($TON_CLI --url $TON_DAPP run $VALIDATOR_WALLET_ADDR getTransactions {} --abi  $TON_CONTRACT_SAFEMULTISIGWALLET_ABI )" 
