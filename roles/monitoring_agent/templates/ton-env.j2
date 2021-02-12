@@ -46,9 +46,9 @@ if [ -f $KEYS_DIR/$VALIDATOR_WALLET_PRV_KEY_2_FILE_NAME ] ; then export VALIDATO
 export DEPOOL_ADDR_FILE_NAME="depool.addr"
 if [ -f $KEYS_DIR/$DEPOOL_ADDR_FILE_NAME ] ; then export DEPOOL_ADDR=`cat $KEYS_DIR/$DEPOOL_ADDR_FILE_NAME` ; fi
 
-export DEPOOL_TICK_ADDR_FILE_NAME="Tik.addr"
+export DEPOOL_TICK_ADDR_FILE_NAME="tik.addr"
 if [ -f $KEYS_DIR/$DEPOOL_TICK_ADDR_FILE_NAME ] ; then export TIK_ADDR=`cat $KEYS_DIR/$DEPOOL_TICK_ADDR_FILE_NAME` ; fi
-export DEPOOL_TICK_KEY_FILE_NAME="Tik.keys.json"
+export DEPOOL_TICK_KEY_FILE_NAME="tik.keys.json"
 if [ -f $KEYS_DIR/$DEPOOL_TICK_KEY_FILE_NAME ] ; then export TIK_PRV_KEY=$KEYS_DIR/$DEPOOL_TICK_KEY_FILE_NAME ; fi
 
 # smart contracts
