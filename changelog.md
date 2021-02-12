@@ -1,3 +1,15 @@
+## 1.2.0
+Update scripts: 
+- ton-env.sh delete unused variables DEPOOL_PROXY_1_ADDR, DEPOOL_PROXY_2_ADDR, add special variables for depool ticktoc
+- ton-env.sh add variables TIK_PRV_KEY, TIK_ADDR
+- ton-env.sh refactoring 
+- ton-wallet-transaction-confirm.sh add optional argumet VALIDATOR_WALLET_PRV_KEY_2
+- ton-election-state.sh return ERROR if dapp or election contract don't work
+- ton-depool-ticktok.sh add force mode and -f argument
+- ton-depool-ticktok.sh send ticktok ones by election cycle
+- ton-depool-proxy-1-balance.sh get proxy from dapp
+- ton-depool-proxy-2-balance.sh get proxy from dapp
+
 ## 1.1.0
 
 Monitoring Added 

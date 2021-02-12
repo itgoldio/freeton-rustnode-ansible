@@ -6,6 +6,12 @@
 TON_ELECTION_PROXY_FILE_NAME="proxy.addr"
 TON_ELECTION_DEPOOL_EVENTS_FILE_NAME="depool-events"
 
+ton-check-env.sh TON_DAPP
+ton-check-env.sh DEPOOL_ADDR
+ton-check-env.sh VALIDATOR_WALLET_ADDR
+ton-check-env.sh TON_CONTRACT_SAFEMULTISIGWALLET_ABI
+ton-check-env.sh VALIDATOR_WALLET_PRV_KEY_1
+
 ##=================
 ## region: CHECK ELECTION STATE AND DATA
 ##=================
@@ -31,18 +37,6 @@ if (( $ELECTION_DATE_END == -1 ));
         exit 0
 fi
 
-
-DEPOOL_ADDR=$(cat $DEPOOL_ADDR_FILE)
-if [ -z "${DEPOOL_ADDR}" ]; then
-    echo "ERROR: $DEPOOL_ADDR_FILE is empty"
-    exit 1
-fi
-
-VALIDATOR_WALLET_ADDR=$(cat $VALIDATOR_WALLET_ADDR_FILE)
-if [ -z "${VALIDATOR_WALLET_ADDR}" ]; then
-    echo "ERROR: $VALIDATOR_WALLET_ADDR_FILE is empty"
-    exit 1
-fi
 
 CURRENT_TIME=$(date +%s)
 
