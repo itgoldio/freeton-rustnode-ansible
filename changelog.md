@@ -1,3 +1,7 @@
+## 1.2.1
+update scripts ton-election-date-end.sh, ton-election-date-start.sh, ton-election-state.sh,
+hotfix for rustnet elector contact. It return empty result.
+
 ## 1.2.0
 Update scripts: 
 - ton-env.sh delete unused variables DEPOOL_PROXY_1_ADDR, DEPOOL_PROXY_2_ADDR, add special variables for depool ticktoc

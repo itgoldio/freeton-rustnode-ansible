@@ -13,10 +13,14 @@ ELECTOR_ADDR="-1:$($TON_CLI --url $TON_DAPP  getconfig 1 | grep 'p1:' | sed 's/C
 # get elector start (unixtime)
 ELECTIONS_START=$($TON_CLI --url $TON_DAPP runget $ELECTOR_ADDR active_election_id  | grep 'Result:' | sed 's/Result:[[:space:]]*//g' | tr -d \"[])
 
-if (( $ELECTIONS_START == 0 ));
-    then
-        echo "-1";
-        exit
+if [ -z $ELECTION_START ]; then
+   echo "-1";
+   exit
+fi
+
+if (( $ELECTIONS_START == 0 ));then
+   echo "-1";
+   exit
 fi
 
 ELECTOR_CONFIG=`$TON_CLI --url $TON_DAPP getconfig 15` 
