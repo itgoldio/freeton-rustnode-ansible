@@ -125,8 +125,6 @@ if [ -z $TON_PROXY ]; then
 fi
 
 if [ ! -f $TON_ELECTION_SUBFOLDER/validator-query.boc ]; then
-{
-
    TON_CONSOLE_CONFIG_NEW=$(jq ".wallet_id=$TON_PROXY" $TON_CONSOLE_CONFIG)  
    echo $TON_CONSOLE_CONFIG_NEW > $TON_CONSOLE_CONFIG
 
@@ -142,6 +140,7 @@ if [ ! -f $TON_ELECTION_SUBFOLDER/validator-query.boc ]; then
    $TON_CONSOLE -C $TON_CONSOLE_CONFIG -c "election-bid $VALIDATION_START $VALIDATION_END"
    mv validator-query.boc "${TON_ELECTION_SUBFOLDER}"
 fi
+
 ##=================
 ## region: SEND VALIDATION REQUEST
 ##=================
