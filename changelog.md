@@ -1,3 +1,8 @@
+## 1.2.2
+update scripts ton-election-date-end.sh, ton-election-date-start.sh, ton-election-state.sh,
+ton-depool-ticktok.sh, ton-depool-validation-request.sh, ton-node-participant-state.sh
+hotfix for rustnet elector contact. 
+
 ## 1.2.1
 update scripts ton-election-date-end.sh, ton-election-date-start.sh, ton-election-state.sh,
 hotfix for rustnet elector contact. It return empty result.
