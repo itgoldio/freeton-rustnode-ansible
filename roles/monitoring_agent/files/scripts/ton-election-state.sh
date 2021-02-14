@@ -21,12 +21,6 @@ if [ -z $ELECTION_START ]; then
 fi
 
 
-if [ -z $ELECTION_START ]; then
-   echo "STOPPED"
-   exit
-fi
-
-
 if (( $ELECTIONS_START == 0 ));then
    echo "STOPPED";
    exit

@@ -20,11 +20,6 @@ if [ -z $ELECTIONS_START ]; then
    ELECTIONS_START=$(echo $ELECTION_RESULT | awk -F'Result: ' '{print $2}' | jq -r '.value0'  )
 fi
 
-if [ -z $ELECTION_START ]; then
-   echo "-1";
-   exit
-fi
-
 if (( $ELECTIONS_START == 0 ));then
    echo "-1";
    exit
