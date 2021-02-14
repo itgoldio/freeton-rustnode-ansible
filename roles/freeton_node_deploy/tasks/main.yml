@@ -253,3 +253,13 @@
     mode: u=rw,g=r,o=
   loop: "{{ freeton_node_contract_URLs_fld | list | unique }}"
   when: freeton_node_global_config_URL == "https://raw.githubusercontent.com/FreeTON-Network/fld.ton.dev/main/configs/fld.ton.dev/ton-global.config.json"
+
+- name: Copy smart contracts for rustnet network
+  get_url:
+    url: "{{ item }}"
+    dest: "{{ freeton_node_contracts_dir }}/"
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+    mode: u=rw,g=r,o=
+  loop: "{{ freeton_node_contract_URLs_rustnet | list | unique }}"
+  when: freeton_node_global_config_URL == "https://raw.githubusercontent.com/tonlabs/rustnet.ton.dev/main/configs/ton-global.config.json"

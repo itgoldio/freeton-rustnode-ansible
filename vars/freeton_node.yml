@@ -61,3 +61,6 @@ freeton_node_contract_URLs:
 
 freeton_node_contract_URLs_fld:
   - https://github.com/FreeTON-Network/fld.ton.dev/raw/main/scripts/Marvin.abi.json
+
+freeton_node_contract_URLs_rustnet:
+  - https://raw.githubusercontent.com/tonlabs/rustnet.ton.dev/main/docker-compose/ton-node/configs/Elector.abi.json
