@@ -1,3 +1,9 @@
+## 1.2.3
+update script ton-node-diff.sh, add arg -f for endless node-diff polling
+improve deafult log size. from 10mb to 100mb
+Increase udp buffer 
+fix non-root user installation
+
 ## 1.2.2
 update scripts ton-election-date-end.sh, ton-election-date-start.sh, ton-election-state.sh,
 ton-depool-ticktok.sh, ton-depool-validation-request.sh, ton-node-participant-state.sh
