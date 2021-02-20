@@ -1,3 +1,6 @@
+## 1.2.4
+fix error in ton-election-state.sh
+
 ## 1.2.3
 update script ton-node-diff.sh, add arg -f for endless node-diff polling
 improve deafult log size. from 10mb to 100mb
