@@ -130,6 +130,16 @@ Script show wallet balance in nanotokens.
 Script find unsigned transaction from wallet to depool and signet it use secondary key. It use ton-env.sh vars by default. You can send wallet addr and depool addr directly as arguments.
 ### [ton-wallet-transaction-count.sh](./roles/monitoring_agent/files/scripts/ton-wallet-transaction-count.sh)
 Script show count unsigned transaction from wallet to depool.
+### [ton-node-validate-current.sh](./roles/monitoring_agent/files/scripts/ton-node-validate-current.sh)
+Script return info about current validation state.
+- Unknonw - something wrong (node not working and etc)
+- True - node can validate at this time
+- False - node can't validate at this time
+### [ton-node-validate-next.sh](./roles/monitoring_agent/files/scripts/ton-node-validate-next.sh)
+Script return info about next validation round.
+- Unknonw - something wrong (node not working and etc)
+- True - node can validate in next round
+- False - node can't validate in next round
 
 ---
 ## Support

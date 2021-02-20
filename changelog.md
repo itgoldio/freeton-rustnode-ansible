@@ -1,3 +1,25 @@
+## 1.2.6
+add script ton-node-validate-current.sh
+add script ton-node-validate-next.sh
+fix script ton-depool-validation-request.sh - check that node akready in vnext list
+
+## 1.2.5
+scripts: use TON_CLI_CONFIG instead of TON_DAPP
+
+## 1.2.4
+fix error in ton-election-state.sh
+
+## 1.2.3
+update script ton-node-diff.sh, add arg -f for endless node-diff polling
+improve deafult log size. from 10mb to 100mb
+Increase udp buffer 
+fix non-root user installation
+
+## 1.2.2
+update scripts ton-election-date-end.sh, ton-election-date-start.sh, ton-election-state.sh,
+ton-depool-ticktok.sh, ton-depool-validation-request.sh, ton-node-participant-state.sh
+hotfix for rustnet elector contact. 
+
 ## 1.2.1
 update scripts ton-election-date-end.sh, ton-election-date-start.sh, ton-election-state.sh,
 hotfix for rustnet elector contact. It return empty result.

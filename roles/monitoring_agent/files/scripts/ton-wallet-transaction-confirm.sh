@@ -5,7 +5,7 @@
 
 # check environments
 ton-check-env.sh TON_CLI
-ton-check-env.sh TON_DAPP
+ton-check-env.sh TON_CLI_CONFIG
 ton-check-env.sh TON_CONTRACT_SAFEMULTISIGWALLET_ABI
 
 if [ $# != 3 ];then
@@ -19,7 +19,7 @@ else
    VALIDATOR_WALLET_PRV_KEY_2=$3
 fi
 
-TRANSACTIONS="$($TON_CLI --url $TON_DAPP run $VALIDATOR_WALLET_ADDR getTransactions {} --abi  $TON_CONTRACT_SAFEMULTISIGWALLET_ABI )" 
+TRANSACTIONS="$($TON_CLI -c $TON_CLI_CONFIG run $VALIDATOR_WALLET_ADDR getTransactions {} --abi  $TON_CONTRACT_SAFEMULTISIGWALLET_ABI )" 
 TRANSACTIONS_COUNT=$(echo $TRANSACTIONS | awk -F'Result: ' '{print $2}' | jq '.transactions|length')
 
 if [[ $TRANSACTIONS_COUNT == 0 ]]; then
@@ -32,7 +32,7 @@ do
    TON_ADDRESS_DESTINATION=$(echo $TRANSACTIONS| awk -F"Result: " '{print $2}' | jq ".transactions[$i].dest" | tr -d \")
    TON_TRANSACTION_ID=$(echo $TRANSACTIONS| awk -F"Result: " '{print $2}' | jq ".transactions[$i].id")
    if [ $TON_ADDRESS_DESTINATION == $DEPOOL_ADDR ]; then
-      $TON_CLI --url $TON_DAPP  call $VALIDATOR_WALLET_ADDR confirmTransaction {\"transactionId\":$TON_TRANSACTION_ID} --abi $TON_CONTRACT_SAFEMULTISIGWALLET_ABI --sign $VALIDATOR_WALLET_PRV_KEY_2
+      $TON_CLI -c $TON_CLI_CONFIG  call $VALIDATOR_WALLET_ADDR confirmTransaction {\"transactionId\":$TON_TRANSACTION_ID} --abi $TON_CONTRACT_SAFEMULTISIGWALLET_ABI --sign $VALIDATOR_WALLET_PRV_KEY_2
    else
       echo "WARNING: unknown destination $TON_ADDRESS_DESTINATION for wallet $VALIDATOR_WALLET_ADDR"
    fi

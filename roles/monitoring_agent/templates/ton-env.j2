@@ -4,16 +4,11 @@
 # path to this file
 export TON_ENV_FILE_PATH="{{ freeton_node_scripts }}/ton-env.sh"
 
-#set link to dapp
-# gql.custler.net   - fld network
-# net.ton.dev       - net (dev) network
-# main.ton.dev      - main (production) network
-# rustnet.ton.dev   - rust cup network
-export TON_DAPP="{{ ton_net_url }}"
-
 # path to TON OS command line tool
 # source code: https://github.com/tonlabs/tonos-cli 
 export TON_CLI="{{ freeton_node_tools_dir }}/tonos-cli"
+export TON_CLI_CONFIG="{{ freeton_node_config_dir }}/tonos-cli.conf.json"
+
 
 # path to rust validator console
 # source code: https://github.com/tonlabs/ton-labs-node-tools
@@ -54,6 +49,9 @@ if [ -f $KEYS_DIR/$DEPOOL_TICK_KEY_FILE_NAME ] ; then export TIK_PRV_KEY=$KEYS_D
 # smart contracts
 #=================
 export TON_CONTRACT_SAFEMULTISIGWALLET_ABI="{{ freeton_node_contracts_dir }}/SafeMultisigWallet.abi.json"
+
+export TON_CONTRACT_ELECTOR_ABI="{{ freeton_node_contracts_dir }}/Elector.abi.json"
+
 
 #election
 #=================
