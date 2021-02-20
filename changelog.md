@@ -1,3 +1,8 @@
+## 1.2.6
+add script ton-node-validate-current.sh
+add script ton-node-validate-next.sh
+fix script ton-depool-validation-request.sh - check that node akready in vnext list
+
 ## 1.2.5
 scripts: use TON_CLI_CONFIG instead of TON_DAPP
 

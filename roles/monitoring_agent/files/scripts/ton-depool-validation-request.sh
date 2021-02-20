@@ -68,13 +68,12 @@ echo "INFO: eclection is active"
 ## region: CHECK ALREADY PARTICIPANT
 ##=================
 
-#already completed request for election
-#PARTICIPANT_STATE=$(ton-node-participant-state.sh)
-#if [ $PARTICIPANT_STATE == "ACTIVE" ]
-#   then
-#        echo "INFO: already in participants list"
-#        exit 0
-#fi;
+ALREADY_VNEXT_LIST=$(ton-node-validate-current.sh)
+if [ $ALREADY_VNEXT_LIST == "True" ]
+   then
+        echo "INFO: already in vnext list"
+        exit 0
+fi;
 
 
 ##=================
