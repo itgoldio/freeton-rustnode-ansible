@@ -1,3 +1,6 @@
+## 1.2.5
+scripts: use TON_CLI_CONFIG instead of TON_DAPP
+
 ## 1.2.4
 fix error in ton-election-state.sh
 

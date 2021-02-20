@@ -5,8 +5,8 @@
 
 ton-check-env.sh VALIDATOR_WALLET_ADDR
 ton-check-env.sh TON_CLI
-ton-check-env.sh TON_DAPP
+ton-check-env.sh TON_CLI_CONFIG
 
-$TON_CLI --url $TON_DAPP  account $VALIDATOR_WALLET_ADDR | grep 'balance:' | sed 's/balance:[[:space:]]*//g'
+$TON_CLI -c $TON_CLI_CONFIG  account $VALIDATOR_WALLET_ADDR | grep 'balance:' | sed 's/balance:[[:space:]]*//g'
 
 exit 0

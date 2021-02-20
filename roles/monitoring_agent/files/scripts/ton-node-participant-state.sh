@@ -4,7 +4,7 @@
 . ton-env.sh
 
 ton-check-env.sh TON_CLI
-ton-check-env.sh TON_DAPP
+ton-check-env.sh TON_CLI_CONFIG
 ton-check-env.sh TON_NODE_CONFIG
 ton-check-env.sh TON_CONSOLE
 ton-check-env.sh TON_CONSOLE_CONFIG
@@ -18,15 +18,15 @@ if [ $ELECTION_STATE != "ACTIVE" ];
 fi
 
 # get elector address
-ELECTOR_ADDR="-1:$($TON_CLI --url $TON_DAPP  getconfig 1 | grep 'p1:' | sed 's/Config p1:[[:space:]]*//g' | tr -d \")"
+ELECTOR_ADDR="-1:$($TON_CLI -c $TON_CLI_CONFIG getconfig 1 | grep 'p1:' | sed 's/Config p1:[[:space:]]*//g' | tr -d \")"
 
 # get elector start (unixtime)
-ELECTIONS_DATE=$($TON_CLI --url $TON_DAPP runget $ELECTOR_ADDR active_election_id  | grep 'Result:' | sed 's/Result:[[:space:]]*//g' | tr -d \"[])
+ELECTIONS_DATE=$($TON_CLI -c $TON_CLI_CONFIG runget $ELECTOR_ADDR active_election_id  | grep 'Result:' | sed 's/Result:[[:space:]]*//g' | tr -d \"[])
 
 ## hotfix try to use new solidity contract for rustnet.ton.dev
 if [ -z $ELECTIONS_DATE ]; then
 
-   ELECTION_RESULT=`$TON_CLI --url $TON_DAPP run $ELECTOR_ADDR active_election_id {} --abi $TON_CONTRACT_ELECTOR_ABI`
+   ELECTION_RESULT=`$TON_CLI -c $TON_CLI_CONFIG run $ELECTOR_ADDR active_election_id {} --abi $TON_CONTRACT_ELECTOR_ABI`
    ELECTIONS_DATE=$(echo $ELECTION_RESULT | awk -F'Result: ' '{print $2}' | jq -r '.value0'  )
 fi
 
@@ -47,7 +47,7 @@ do
       TON_ADNL_KEY_HASH=$(cat $TON_NODE_CONFIG | jq ".validator_keys[$i].validator_key_id"| tr -d \")
       TON_ADNL_KEY="$($TON_CONSOLE -C $TON_CONSOLE_CONFIG -c "exportpub $TON_ADNL_KEY_HASH" | awk -F"imported key:" '{print $2}' | awk -F" " '{print $1}' )"
       
-      TON_ADNL_KEY_FROM_ELECTOR=$($TON_CLI --url $TON_DAPP runget $ELECTOR_ADDR participant_list_extended | grep "$TON_ADNL_KEY")
+      TON_ADNL_KEY_FROM_ELECTOR=$($TON_CLI -c $TON_CLI_CONFIG runget $ELECTOR_ADDR participant_list_extended | grep "$TON_ADNL_KEY")
 
       if [ -z "$TON_ADNL_KEY_FROM_ELECTOR" ]; then
             echo "NOT_FOUND"

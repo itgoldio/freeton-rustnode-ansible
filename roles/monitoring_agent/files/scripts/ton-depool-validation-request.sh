@@ -6,7 +6,7 @@
 TON_ELECTION_PROXY_FILE_NAME="proxy.addr"
 TON_ELECTION_DEPOOL_EVENTS_FILE_NAME="depool-events"
 
-ton-check-env.sh TON_DAPP
+ton-check-env.sh TON_CLI_CONFIG
 ton-check-env.sh DEPOOL_ADDR
 ton-check-env.sh VALIDATOR_WALLET_ADDR
 ton-check-env.sh TON_CONTRACT_SAFEMULTISIGWALLET_ABI
@@ -48,16 +48,16 @@ else
 fi
 
 # get elector address
-ELECTOR_ADDR="-1:$($TON_CLI --url $TON_DAPP  getconfig 1 | grep 'p1:' | sed 's/Config p1:[[:space:]]*//g' | tr -d \")"
+ELECTOR_ADDR="-1:$($TON_CLI -c $TON_CLI_CONFIG  getconfig 1 | grep 'p1:' | sed 's/Config p1:[[:space:]]*//g' | tr -d \")"
 
 # get elector start (unixtime)
-ELECTIONS_DATE=$($TON_CLI --url $TON_DAPP runget $ELECTOR_ADDR active_election_id  | grep 'Result:' | sed 's/Result:[[:space:]]*//g' | tr -d \"[])
+ELECTIONS_DATE=$($TON_CLI -c $TON_CLI_CONFIG runget $ELECTOR_ADDR active_election_id  | grep 'Result:' | sed 's/Result:[[:space:]]*//g' | tr -d \"[])
 
 
 ## hotfix try to use new solidity contract for rustnet.ton.dev
 if [ -z $ELECTIONS_DATE ]; then
 
-   ELECTION_RESULT=`$TON_CLI --url $TON_DAPP run $ELECTOR_ADDR active_election_id {} --abi $TON_CONTRACT_ELECTOR_ABI`
+   ELECTION_RESULT=`$TON_CLI -c $TON_CLI_CONFIG run $ELECTOR_ADDR active_election_id {} --abi $TON_CONTRACT_ELECTOR_ABI`
    ELECTIONS_DATE=$(echo $ELECTION_RESULT | awk -F'Result: ' '{print $2}' | jq -r '.value0'  )
 fi
 
@@ -98,7 +98,7 @@ if [ ! -d $TON_ELECTION_SUBFOLDER ]; then
 fi
 
 if [ ! -f $TON_ELECTION_SUBFOLDER/$TON_ELECTION_PROXY_FILE_NAME ]; then
-   TON_DEPOOL_EVENTS=$($TON_CLI --url $TON_DAPP depool --addr $DEPOOL_ADDR  events)
+   TON_DEPOOL_EVENTS=$($TON_CLI -c $TON_CLI_CONFIG depool --addr $DEPOOL_ADDR  events)
    echo "$TON_DEPOOL_EVENTS" > "$TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_EVENTS_FILE_NAME"
 
    TON_PROXY=$(echo "$TON_DEPOOL_EVENTS" | grep $ELECTIONS_DATE | jq ".proxy")
@@ -129,7 +129,7 @@ if [ ! -f $TON_ELECTION_SUBFOLDER/validator-query.boc ]; then
    echo $TON_CONSOLE_CONFIG_NEW > $TON_CONSOLE_CONFIG
 
 
-   ELECTOR_CONFIG=`$TON_CLI --url $TON_DAPP getconfig 15` 
+   ELECTOR_CONFIG=`$TON_CLI -c $TON_CLI_CONFIG getconfig 15` 
    ELECTOR_CONFIG_JSON=$(echo $ELECTOR_CONFIG | awk '{split($0, a, "p15:"); print a[2]}')
    ELECTOR_CONFIG_VALIDATORS_ELECTED_FOR=`echo "$ELECTOR_CONFIG_JSON" | jq ".validators_elected_for"`
    ELECTOR_CONFIG_STAKE_HELD_FOR=`echo "$ELECTOR_CONFIG_JSON" | jq ".stake_held_for"`
@@ -151,4 +151,4 @@ fi
 
 TON_PAYLOAD=$(base64 --wrap=0 "${TON_ELECTION_SUBFOLDER}/validator-query.boc")
 
-$TON_CLI --url $TON_DAPP call $VALIDATOR_WALLET_ADDR submitTransaction "{\"dest\":\"$DEPOOL_ADDR\",\"value\":\"1000000000\",\"bounce\":true,\"allBalance\":false,\"payload\":\"$TON_PAYLOAD\"}" --abi $TON_CONTRACT_SAFEMULTISIGWALLET_ABI --sign $VALIDATOR_WALLET_PRV_KEY_1
+$TON_CLI -c $TON_CLI_CONFIG call $VALIDATOR_WALLET_ADDR submitTransaction "{\"dest\":\"$DEPOOL_ADDR\",\"value\":\"1000000000\",\"bounce\":true,\"allBalance\":false,\"payload\":\"$TON_PAYLOAD\"}" --abi $TON_CONTRACT_SAFEMULTISIGWALLET_ABI --sign $VALIDATOR_WALLET_PRV_KEY_1

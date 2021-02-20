@@ -14,6 +14,7 @@ shift $(($OPTIND - 1))
 
 ton-check-env.sh TON_CONSOLE
 ton-check-env.sh TON_CONSOLE_CONFIG
+ton-check-env.sh TON_CLI_CONFIG
 
 show_node_diff ()
 {
@@ -29,6 +30,7 @@ if [ $cycle_view -eq 0 ]; then
         echo $NODE_DIFF
 fi
 
+TON_DAPP=$(cat $TON_CLI_CONFIG | jq '.url')
 while [ $cycle_view -gt 0 ]; do
         show_node_diff;
         echo "${TON_DAPP} ${TS}: $NODE_DIFF"
