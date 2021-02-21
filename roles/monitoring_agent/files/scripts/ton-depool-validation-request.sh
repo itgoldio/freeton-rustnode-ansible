@@ -64,11 +64,14 @@ fi
 echo "INFO: eclection is active"
 
 
+
+
+
 ##=================
-## region: CHECK ALREADY PARTICIPANT
+## region: CHECK ALREADY IN VNEXT
 ##=================
 
-ALREADY_VNEXT_LIST=$(ton-node-validate-current.sh)
+ALREADY_VNEXT_LIST=$(ton-node-validate-next.sh)
 if [ $ALREADY_VNEXT_LIST == "True" ]
    then
         echo "INFO: already in vnext list"

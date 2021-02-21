@@ -1,3 +1,6 @@
+## 1.2.7
+fix ton-depool-validation-request.sh, check vnext not curr list 
+
 ## 1.2.6
 add script ton-node-validate-current.sh
 add script ton-node-validate-next.sh
