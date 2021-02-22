@@ -30,3 +30,5 @@ rustup_mirror : https://static.rust-lang.org/rustup/dist
 rustup_platform : x86_64-unknown-linux-gnu
 # Default rust version: stable|beta|nightly|<major.minor>|<major.minor.patch>
 rustup_default_toolchain: stable
+# Rust flags compile environment
+rust_flags: "-C target-cpu=native"

@@ -79,6 +79,8 @@
     - name: Build repo | freeton node
       command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/freeton_node/Cargo.toml --target-dir {{ freeton_node_src_dir }} --release'
   when: freeton_node_sources.changed or freeton_node_force_recompile
+  environment:
+    RUSTFLAGS: "{{ rust_flags }}"
 
 - name: Build freeton node tools
   block:
@@ -87,6 +89,8 @@
     - name: Build repo | node tools
       command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/freeton_node_tools/Cargo.toml --target-dir {{ freeton_node_src_dir }} --release'
   when: freeton_node_tools_sources.changed or freeton_node_tools_force_recompile
+  environment:
+    RUSTFLAGS: "{{ rust_flags }}"
 
 - name: Build tonos cli
   block:
@@ -95,6 +99,8 @@
     - name: Build repo | tonos cli
       command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/tonos_cli/Cargo.toml --target-dir {{ freeton_node_src_dir }} --release'
   when: tonos_cli_sources.changed or tonos_cli_force_recompile
+  environment:
+    RUSTFLAGS: "{{ rust_flags }}"
 
 - name: Build tvm linker
   block:
@@ -103,3 +109,5 @@
     - name: Build repo | tvm linker
       command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/tvm_linker/tvm_linker/Cargo.toml --target-dir {{ freeton_node_src_dir }} --release'
   when: tvm_linker_sources.changed or tvm_linker_force_recompile
+  environment:
+    RUSTFLAGS: "{{ rust_flags }}"
