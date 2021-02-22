@@ -1,3 +1,7 @@
+## 1.2.11
+there's no need to exec sed twice for scripts ton-node-validate-next.sh, ton-node-validate-current.s
+restart freeton node always if something happend (old value is on-failure)
+
 ## 1.2.10
 - add missing data to ton-node-participant-state.sh
 - ton-depool-validation-request.sh store info that validation request was send
