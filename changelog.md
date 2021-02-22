@@ -1,3 +1,10 @@
+## 1.2.9
+fix wrong vars in 
+- ton-election-date-end.sh
+- ton-election-date-start.sh
+- ton-election-state.sh
+
+
 ## 1.2.8
 refactoring scripts for work with rustcup elector 
 add more info into readme

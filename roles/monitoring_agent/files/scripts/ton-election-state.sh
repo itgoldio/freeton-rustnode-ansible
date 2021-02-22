@@ -18,9 +18,10 @@ if [ $ELECTIONS_DATE = "0" ]; then
    exit
 fi
 
-if (( $ELECTIONS_START > 0 ));then
+if (( $ELECTIONS_DATE > 0 ));then
    echo "ACTIVE";
    exit
 fi
 
 echo "ERROR: unknown election date $ELECTIONS_DATE";
+
