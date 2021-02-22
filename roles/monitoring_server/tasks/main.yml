@@ -1,38 +1,7 @@
 ---
 
-- name: Install prerequisites for Docker repository
-  package:
-    name:
-    - apt-transport-https
-    - ca-certificates
-    - curl
-    - gnupg2
-    - software-properties-common
-    - jq
-    - python3-passlib
-    state: present
-    update_cache: yes
-    cache_valid_time: 3600
-
-- name: Add docker apt key
-  apt_key:
-    url: https://download.docker.com/linux/ubuntu/gpg
-    state: present
-
-- name: Add docker apt repo
-  apt_repository:
-    repo: "deb [arch=amd64] https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} stable"
-    state: present
-    update_cache: yes
-  
-- name: Install docker and it's dependencies
-  package:
-    name:
-      - docker-ce
-      - docker-ce-cli
-      - containerd.io
-    state: present
-  notify: restart_docker
+- name: Include os specific tasks
+  include_tasks: "{{ ansible_pkg_mgr }}.yml"
 
 - name: Check if docker-compose exists
   stat:

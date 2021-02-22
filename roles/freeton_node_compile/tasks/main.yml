@@ -27,32 +27,8 @@
     group: "{{ freeton_node_group }}"
     mode: u=rwx,g=,o=
 
-- name: Add {{ freeton_node_scripts }} to PATH env
-  lineinfile:
-    dest: /etc/environment
-    state: present
-    backrefs: yes
-    regexp: 'PATH=(["]*)((?!.*?{{ freeton_node_scripts }}:{{ freeton_node_tools_dir }}).*?)(["]*)$'
-    line: "PATH=\\1\\2:{{ freeton_node_scripts }}:{{ freeton_node_tools_dir }}\\3"
-
-- name: Install freeton compile dependencies
-  package:
-    name:
-      - git
-      - libssl-dev
-      - pkg-config
-      - build-essential
-      - autoconf
-      - automake
-      - m4
-      - cmake
-      - libtool
-      - clang
-      - tar
-      - gpg
-    state: present
-    update_cache: yes
-    cache_valid_time: 3600
+- name: Include os specific tasks
+  include_tasks: "{{ ansible_pkg_mgr }}.yml"
 
 - name: Download Rust init
   get_url:
