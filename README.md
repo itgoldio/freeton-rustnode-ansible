@@ -114,6 +114,8 @@ Script show depool proxy 2 balance in nanotokens.
 Script send ticktock command from wallet to depool.
 ### [ton-depool-validation-request.sh](./roles/monitoring_agent/files/scripts/ton-depool-validation-request.sh)
 Validator script for elections through depool.
+### [ton-election-date.sh](./roles/monitoring_agent/files/scripts/ton-election-date.sh)
+Script return date election in unix time or return 0 if election isn't active or return -1 is something wrong
 ### [ton-election-date-end.sh](./roles/monitoring_agent/files/scripts/ton-election-date-end.sh)
 Script return date end election in unix time or return -1 if election isn't active.
 ### [ton-election-date-start.sh](./roles/monitoring_agent/files/scripts/ton-election-date-start.sh)
@@ -140,6 +142,27 @@ Script return info about next validation round.
 - Unknonw - something wrong (node not working and etc)
 - True - node can validate in next round
 - False - node can't validate in next round
+
+---
+## Automate staking through depool
+Add several scripts to crontab use
+`crontab -e -u freeton`
+
+### Automate ticktock depool
+add to cro\
+`*/3 * * * * /bin/bash && export PATH=$PATH:/opt/freeton/scripts &&  cd /opt/freeton/scripts && ton-depool-ticktok.sh >> /opt/freeton/logs/crontab-ton-depool-ticktok.log`\
+it will ticktock dpool once by election cycle
+
+### Automate send validation request
+add to cron\
+`*/10 * * * * /bin/bash && export PATH=$PATH:/opt/freeton/scripts &&  cd /opt/freeton/scripts && ton-depool-validation-request.sh >> /opt/freeton/logs/crontab-ton-depool-validation-request.log`\
+it will ticktock dpool once by election cycle
+
+### *[Optional]* Sing transaction use secondary key
+If you use wallet with RegConfirm = 2, you can sing transaction from wallet to depool use secondary key
+add to cron\
+`*/10 * * * * /bin/bash && export PATH=$PATH:/opt/freeton/scripts &&  cd /opt/freeton/scripts && ton-wallet-transaction-confirm.sh >> /opt/freeton/logs/crontab-ton-wallet-transaction-confirm.log`
+
 
 ---
 ## Support

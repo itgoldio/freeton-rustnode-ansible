@@ -1,3 +1,7 @@
+## 1.2.8
+refactoring scripts for work with rustcup elector 
+add more info into readme
+
 ## 1.2.7
 fix ton-depool-validation-request.sh, check vnext not curr list 
 
