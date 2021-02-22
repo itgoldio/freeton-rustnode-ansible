@@ -41,6 +41,11 @@ if [ $ELECTIONS_DATE = "0" ]; then
 fi
 
 
+
+# get elector address
+ELECTOR_ADDR="-1:$($TON_CLI -c $TON_CLI_CONFIG  getconfig 1 | grep 'p1:' | sed 's/Config p1:[[:space:]]*//g' | tr -d \")"
+
+
 #cat $TON_NODE_CONFIG
 TON_VALIDATOR_KEYS_COUNT=$(cat $TON_NODE_CONFIG  | jq '.validator_keys|length')
 
