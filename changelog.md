@@ -1,3 +1,7 @@
+## 1.2.10
+- add missing data to ton-node-participant-state.sh
+- ton-depool-validation-request.sh store info that validation request was send
+
 ## 1.2.9
 fix wrong vars in 
 - ton-election-date-end.sh

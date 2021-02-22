@@ -5,6 +5,7 @@
 
 TON_ELECTION_PROXY_FILE_NAME="proxy.addr"
 TON_ELECTION_DEPOOL_EVENTS_FILE_NAME="depool-events"
+TON_ELECTION_DEPOOL_VALIDATION_REQ_SENDED="validation.request.sended"
 
 ton-check-env.sh TON_CLI_CONFIG
 ton-check-env.sh DEPOOL_ADDR
@@ -70,7 +71,6 @@ if [ $ALREADY_VNEXT_LIST == "True" ]
         exit 0
 fi;
 
-
 ##=================
 ## region: CHECK UNCOMPLITE TRANSACTION
 ##=================
@@ -90,6 +90,16 @@ TON_ELECTION_SUBFOLDER="$TON_ELECTION_FOLDER/$ELECTIONS_DATE"
 if [ ! -d $TON_ELECTION_SUBFOLDER ]; then
    mkdir $TON_ELECTION_SUBFOLDER
 fi
+
+##=================
+## region: CHECK validation request sended
+##=================
+
+if [ -f $TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_VALIDATION_REQ_SENDED ]; then
+   echo "INFO: request already sended, see $TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_VALIDATION_REQ_SENDED"
+   exit
+fi
+
 
 if [ ! -f $TON_ELECTION_SUBFOLDER/$TON_ELECTION_PROXY_FILE_NAME ]; then
    TON_DEPOOL_EVENTS=$($TON_CLI -c $TON_CLI_CONFIG depool --addr $DEPOOL_ADDR  events)
@@ -145,4 +155,13 @@ fi
 
 TON_PAYLOAD=$(base64 --wrap=0 "${TON_ELECTION_SUBFOLDER}/validator-query.boc")
 
-$TON_CLI -c $TON_CLI_CONFIG call $VALIDATOR_WALLET_ADDR submitTransaction "{\"dest\":\"$DEPOOL_ADDR\",\"value\":\"1000000000\",\"bounce\":true,\"allBalance\":false,\"payload\":\"$TON_PAYLOAD\"}" --abi $TON_CONTRACT_SAFEMULTISIGWALLET_ABI --sign $VALIDATOR_WALLET_PRV_KEY_1
+TON_VALIDATOR_QUERY_SEND_RESULT=$($TON_CLI -c $TON_CLI_CONFIG call $VALIDATOR_WALLET_ADDR submitTransaction "{\"dest\":\"$DEPOOL_ADDR\",\"value\":\"1000000000\",\"bounce\":true,\"allBalance\":false,\"payload\":\"$TON_PAYLOAD\"}" --abi $TON_CONTRACT_SAFEMULTISIGWALLET_ABI --sign $VALIDATOR_WALLET_PRV_KEY_1)
+
+echo "$TON_VALIDATOR_QUERY_SEND_RESULT"
+
+TON_VALIDATOR_QUERY_SEND_RESULT_SUCCESS=$(echo "$TON_VALIDATOR_QUERY_SEND_RESULT" | grep "transId")
+
+if [ ! -z "$TON_VALIDATOR_QUERY_SEND_RESULT_SUCCESS" ]; then
+   echo "$TON_VALIDATOR_QUERY_SEND_RESULT" > "$TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_VALIDATION_REQ_SENDED"
+fi
+
