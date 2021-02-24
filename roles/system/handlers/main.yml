@@ -7,12 +7,12 @@
     state: restarted
   listen: "restart ntp"
 
-- name: Restart ntpd service
+- name: Restart chronyd service
   systemd:
-    name: ntpd
+    name: chronyd
     enabled: true
     state: restarted
-  listen: "restart ntpd"
+  listen: "restart chronyd"
 
 - name: Start disable-transparent-huge-pages service
   systemd:

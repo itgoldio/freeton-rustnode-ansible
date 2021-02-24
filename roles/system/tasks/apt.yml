@@ -1,0 +1,32 @@
+- name: Install system packages
+  apt:
+    name:
+      - vim
+      - mc
+      - htop
+      - rsyslog
+      - apt-transport-https
+      - wget
+      - gnupg
+      - ca-certificates
+      - curl
+      - dnsutils
+      - jq
+      - acl
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+
+- block:
+    - name: Install ntp package
+      apt:
+        name: ntp
+        state: latest
+        update_cache: yes
+
+    - name: Copy the ntp.conf file
+      template:
+        src: ntp.conf.j2
+        dest: /etc/ntp.conf
+      notify: "restart ntp"
+  when: ntp_enabled is defined and ntp_enabled|bool

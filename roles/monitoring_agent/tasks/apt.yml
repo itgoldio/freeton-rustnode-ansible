@@ -1,0 +1,18 @@
+
+- name: Add telegraf apt key
+  apt_key:
+    url: https://repos.influxdata.com/influxdb.key
+    state: present
+
+- name: Add telegraf apt repo
+  apt_repository:
+    repo: "deb [arch=amd64] https://repos.influxdata.com/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} stable"
+    state: present
+    update_cache: yes
+  
+- name: Install telegraf and it's dependencies
+  apt:
+    name:
+      - telegraf
+    state: latest
+  notify: restart_telegraf

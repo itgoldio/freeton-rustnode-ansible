@@ -1,0 +1,17 @@
+- name: Add telegraf repo
+  yum_repository:
+    name: influxdb
+    description: InfluxDB Repository - RHEL $releasever
+    file: influxdb
+    baseurl: https://repos.influxdata.com/rhel/$releasever/$basearch/stable
+    gpgcheck: yes
+    gpgkey: https://repos.influxdata.com/influxdb.key
+    enabled: yes
+
+- name: Install telegraf and it's dependencies
+  dnf:
+    name:
+      - telegraf
+    state: latest
+    update_cache: yes
+  notify: restart_telegraf
