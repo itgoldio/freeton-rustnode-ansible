@@ -159,22 +159,32 @@ Script find unsigned transaction from wallet to depool and signet it use seconda
 Script show count unsigned transaction from wallet to depool.
 ### [ton-node-validate-current.sh](./roles/monitoring_agent/files/scripts/ton-node-validate-current.sh)
 Script return info about current validation state.
-- Unknonw - something wrong (node not working and etc)
+- Unknown - something wrong (node not working and etc)
 - True - node can validate at this time
 - False - node can't validate at this time
 ### [ton-node-validate-next.sh](./roles/monitoring_agent/files/scripts/ton-node-validate-next.sh)
 Script return info about next validation round.
-- Unknonw - something wrong (node not working and etc)
+- Unknown - something wrong (node not working and etc)
 - True - node can validate in next round
 - False - node can't validate in next round
 
 ---
 ## Automate staking through depool
+You need to put your keys and data to `/home/freeton/ton-keys`:
+- $HOSTNAME.addr file with wallet address
+- depool.addr file with depool address
+- msig.keys.json file with private key for wallet
+- *[Optional]* msig2.keys.json file with private key for second sign
+- tik.addr wallet addr for send ticktock request to depool. You can put $HOSTNAME.addr data to here
+- tik.keys.json file with private key for tik.addr
+
+TIP: you can change default location for keys in vars/[freeton_node.yml](./vars/freeton_node.yml) 
+
 Add several scripts to crontab use
 `crontab -e -u freeton`
 
 ### Automate ticktock depool
-add to cro\
+add to cron\
 `*/3 * * * * /bin/bash && export PATH=$PATH:/opt/freeton/scripts &&  cd /opt/freeton/scripts && ton-depool-ticktok.sh >> /opt/freeton/logs/crontab-ton-depool-ticktok.log`\
 it will ticktock dpool once by election cycle
 
