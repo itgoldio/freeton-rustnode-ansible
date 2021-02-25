@@ -985,16 +985,7 @@
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
+            "steps": []
           }
         },
         "overrides": []
@@ -1041,12 +1032,20 @@
               {
                 "params": [],
                 "type": "last"
+              },
+              {
+                "params": [
+                  " / 1000000000"
+                ],
+                "type": "math"
               }
             ]
           ],
           "tags": []
         }
       ],
+      "timeFrom": null,
+      "timeShift": null,
       "title": "Wallet balance",
       "type": "stat"
     },
@@ -1061,16 +1060,7 @@
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
+            "steps": []
           }
         },
         "overrides": []
@@ -1101,7 +1091,7 @@
       "targets": [
         {
           "groupBy": [],
-          "measurement": "ton-depool-balance",
+          "measurement": "ton-depool-proxy-1-balance",
           "orderByTime": "DESC",
           "policy": "default",
           "refId": "A",
@@ -1129,6 +1119,8 @@
           "tags": []
         }
       ],
+      "timeFrom": null,
+      "timeShift": null,
       "title": "Proxy 1 balance",
       "type": "stat"
     },
@@ -1143,16 +1135,7 @@
           "mappings": [],
           "thresholds": {
             "mode": "absolute",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 80
-              }
-            ]
+            "steps": []
           }
         },
         "overrides": []
@@ -1183,7 +1166,7 @@
       "targets": [
         {
           "groupBy": [],
-          "measurement": "ton-depool-balance",
+          "measurement": "ton-depool-proxy-2-balance",
           "orderByTime": "DESC",
           "policy": "default",
           "refId": "A",
@@ -1207,6 +1190,8 @@
           "tags": []
         }
       ],
+      "timeFrom": null,
+      "timeShift": null,
       "title": "Proxy 2 balance",
       "type": "stat"
     },
@@ -1240,5 +1225,5 @@
   "timezone": "browser",
   "title": "Freeton metrics",
   "uid": "ton-2",
-  "version": 6
+  "version": 7
 }
