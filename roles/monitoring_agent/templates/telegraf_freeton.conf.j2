@@ -138,3 +138,117 @@
   ##   https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md
   data_format = "value"
   data_type = "integer" # required
+
+[[inputs.exec]]
+  ## Commands array
+  commands = ["/opt/freeton/scripts/ton-depool-balance.sh"]
+
+  ## override the default metric name of "exec"
+  name_override = "ton-depool-balance"
+
+  ## Data format to consume.
+  ## Each data format has its own unique set of configuration options, read
+  ## more about them here:
+  ##   https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md
+  data_format = "value"
+  data_type = "long" # required
+
+[[inputs.exec]]
+  ## Commands array
+  commands = ["/opt/freeton/scripts/ton-depool-proxy-1-balance.sh"]
+
+  ## override the default metric name of "exec"
+  name_override = "ton-depool-proxy-1-balance"
+
+  ## Data format to consume.
+  ## Each data format has its own unique set of configuration options, read
+  ## more about them here:
+  ##   https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md
+  data_format = "value"
+  data_type = "long" # required
+
+[[inputs.exec]]
+  ## Commands array
+  commands = ["/opt/freeton/scripts/ton-depool-proxy-2-balance.sh"]
+
+  ## override the default metric name of "exec"
+  name_override = "ton-depool-proxy-2-balance"
+
+  ## Data format to consume.
+  ## Each data format has its own unique set of configuration options, read
+  ## more about them here:
+  ##   https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md
+  data_format = "value"
+  data_type = "long" # required
+
+[[inputs.exec]]
+  ## Commands array
+  commands = ["/opt/freeton/scripts/ton-wallet-balance.sh"]
+
+  ## override the default metric name of "exec"
+  name_override = "ton-wallet-balance"
+
+  ## Data format to consume.
+  ## Each data format has its own unique set of configuration options, read
+  ## more about them here:
+  ##   https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md
+  data_format = "value"
+  data_type = "long" # required
+  
+[[inputs.exec]]
+  ## Commands array
+  commands = ["/opt/freeton/scripts/ton-wallet-transaction-count.sh"]
+
+  ## override the default metric name of "exec"
+  name_override = "ton-wallet-unsign-transaction-count"
+
+  ## Data format to consume.
+  ## Each data format has its own unique set of configuration options, read
+  ## more about them here:
+  ##   https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md
+  data_format = "value"
+  data_type = "integer" # required
+
+  
+[[inputs.exec]]
+  ## Commands array
+  commands = ["/opt/freeton/scripts/ton-node-participant-state.sh"]
+
+  ## override the default metric name of "exec"
+  name_override = "ton-node-participant-state"
+
+  ## Data format to consume.
+  ## Each data format has its own unique set of configuration options, read
+  ## more about them here:
+  ##   https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md
+  data_format = "value"
+  data_type = "string" # required
+
+
+[[inputs.exec]]
+  ## Commands array
+  commands = ["/opt/freeton/scripts/ton-node-validate-current.sh"]
+
+  ## override the default metric name of "exec"
+  name_override = "ton-node-validate-current"
+
+  ## Data format to consume.
+  ## Each data format has its own unique set of configuration options, read
+  ## more about them here:
+  ##   https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md
+  data_format = "value"
+  data_type = "string" # required
+
+[[inputs.exec]]
+  ## Commands array
+  commands = ["/opt/freeton/scripts/ton-node-validate-next.sh"]
+
+  ## override the default metric name of "exec"
+  name_override = "ton-node-validate-next"
+
+  ## Data format to consume.
+  ## Each data format has its own unique set of configuration options, read
+  ## more about them here:
+  ##   https://github.com/influxdata/telegraf/blob/master/docs/DATA_FORMATS_INPUT.md
+  data_format = "value"
+  data_type = "string" # required
