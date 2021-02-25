@@ -5,6 +5,8 @@
 
 #### Minimum OS versions:
 Ubuntu: 18.04
+Debian: 10
+CentOS, Oracle Linux: 8
 
 #### Ansible version
 This has been tested on Ansible 2.9.х
@@ -16,9 +18,17 @@ Ansible ([What is Ansible](https://www.ansible.com/resources/videos/quick-start-
 ---
 ## Deployment: quick start
 0. [Install Ansible](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html) to the managed machine
-###### Example: install ansible on [Ubuntu](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-ubuntu)
+###### Example: install ansible on [Ubuntu and Debian](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-ubuntu)
 `sudo apt update`\
 `sudo apt install ansible sshpass git`
+
+###### Example: install ansible on [CentOS](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-ansible-on-rhel-centos-or-fedora)
+`sudo dnf install epel-release`\
+`sudo dnf install ansible sshpass git`
+
+###### Example: install ansible on [Oracle Linux]
+`sudo dnf install oracle-epel-release-el8`\
+`sudo dnf install ansible sshpass git`
 
 1. Download or clone this repository
 
@@ -99,26 +109,26 @@ When you change global network config, for example, you running rustnet.ton.dev 
 ##### Do not use flush tag without any other tags
 ---
 ## Monitoring
-You can see our grafana dashboard by address `http://<monitoring_server_ip>:3000/`
+You can see installed grafana dashboard: `http://<monitoring_server_ip>:3000/`
 
-![dashboadr](docs/grafana-1.png?raw=true "grafana-1")
+![dashboard](docs/grafana-1.png?raw=true "grafana-1")
 
-- show current timediff and timediff graph
+- Show current timediff and timediff graph
 - Current Election state (Started/Stopped)
-- Current Election date start (date or undefine if elector don’t started)
-- Current Election date stop (date or undefine if elector don’t started)
-- Info, that node already in participant list
-- info, that node already win election and wait new validation cycle
-- count of unsign transaction between wallet to depool
+- Current Election start date (date or undefined value if election don’t started)
+- Current Election end date (date or undefined value if election don’t started)
+- Info that node already in validation participant list
+- Info that node already won election and waits for new validation cyclee
+- Count of unsigned transactions between wallet and depool
 - Wallet balance
-- depool balance
-- proxy-1 balance
-- proxy-2 balance
-- many system graphs, we change it after testing node in rustcup
+- Depool balance
+- Proxy-1 balance
+- Proxy-2 balance
+- Many system graphs, we going to change it after rustcup will happen
 
-You can see our chronograf dashboard by address `http://<monitoring_server_ip>:8888/`
+You can see our chronograf dashboard on next address `http://<monitoring_server_ip>:8888/`
 
-![dashboadr](docs/chronograf-1.png?raw=true "chronograf-1")
+![dashboard](docs/chronograf-1.png?raw=true "chronograf-1")
 
 You can see or change credentials in vars/[monitoring.yml](./vars/monitoring.yml)
 
@@ -135,41 +145,41 @@ You can use telegram, slack, email, webhook and others
 - Edit dashboard panel
 - select tab Alert
 
-more info here: https://grafana.com/docs/grafana/latest/alerting/create-alerts/
+More info here: https://grafana.com/docs/grafana/latest/alerting/create-alerts/
 
 ---
 ## Automate staking through depool
-You need to put your keys and data to `/home/freeton/ton-keys`:
+You need to put your keys and data in `/home/freeton/ton-keys`:
 - $HOSTNAME.addr file with wallet address
 - depool.addr file with depool address
-- msig.keys.json file with private key for wallet
-- *[Optional]* msig2.keys.json file with private key for second sign
-- tik.addr wallet addr for send ticktock request to depool. You can put $HOSTNAME.addr data to here
-- tik.keys.json file with private key for tik.addr
+- msig.keys.json file with wallet private key
+- *[Optional]* msig2.keys.json file with second sign private key
+- tik.addr - send ticktock request to depool wallet addr. You can put $HOSTNAME.addr data to here
+- tik.keys.json file with tik.addr private key
 
-TIP: you can change default location for keys in vars/[freeton_node.yml](./vars/freeton_node.yml) 
+TIP: you can change keys default location in vars/[freeton_node.yml](./vars/freeton_node.yml) 
 
-Add several scripts to crontab use
+To automate validation process with scripts you should place it in cron
 `crontab -e -u freeton`
 
 ### Automate ticktock depool
-add to cron\
+Add to cron\
 `*/3 * * * * /bin/bash && export PATH=$PATH:/opt/freeton/scripts &&  cd /opt/freeton/scripts && ton-depool-ticktok.sh >> /opt/freeton/logs/crontab-ton-depool-ticktok.log`\
-it will ticktock dpool once by election cycle
+it will ticktock depool once in election cycle
 
 ### Automate send validation request
-add to cron\
+Add to cron\
 `*/10 * * * * /bin/bash && export PATH=$PATH:/opt/freeton/scripts &&  cd /opt/freeton/scripts && ton-depool-validation-request.sh >> /opt/freeton/logs/crontab-ton-depool-validation-request.log`\
-it will ticktock dpool once by election cycle
+It will send validation request
 
 ### *[Optional]* Sing transaction use secondary key
-If you use wallet with RegConfirm = 2, you can sing transaction from wallet to depool use secondary key
-add to cron\
+If you use wallet with RegConfirm = 2, you can sign transaction with secondary wallet key to depool
+To automate it, just add next string to cron\
 `*/10 * * * * /bin/bash && export PATH=$PATH:/opt/freeton/scripts &&  cd /opt/freeton/scripts && ton-wallet-transaction-confirm.sh >> /opt/freeton/logs/crontab-ton-wallet-transaction-confirm.log`
 
 ---
 ## Scripts
-All scripts will be added to PATH for freeton user. Monitoring use several scripts.
+All scripts will be added to PATH env for freeton user. Monitoring agent use several scripts.
 ### [ton-env.sh](./roles/monitoring_agent/files/../templates/ton-env.j2)
 Script main script. It store all shared variables that used in other scripts. Please, fill it first.
 ### [ton-check-env.sh](./roles/monitoring_agent/files/scripts/ton-check-env.sh)

@@ -25,7 +25,7 @@
     state: directory
     owner: "{{ freeton_node_user }}"
     group: "{{ freeton_node_group }}"
-    mode: u=rwx,g=,o=
+    mode: u=rwx,g=rx,o=
 
 - name: Include os specific tasks
   include_tasks: "{{ ansible_pkg_mgr }}.yml"
