@@ -98,6 +98,18 @@ When you change global network config, for example, you running rustnet.ton.dev 
 
 ##### Do not use flush tag without any other tags
 ---
+## Monitoring
+You can see our grafana dashboard by address `http://<monitoring_server_ip>:3000/`
+
+![dashboadr](docs/grafana-1.png?raw=true "grafana-1")
+
+You can see our grafana dashboard by address `http://<monitoring_server_ip>:8888/`
+
+![dashboadr](docs/chronograf-1.png?raw=true "chronograf-1")
+
+You can see or change credentials in vars/[monitoring.yml](./vars/monitoring.yml)
+
+---
 ## Scripts
 All scripts will be added to PATH for freeton user. Monitoring use several scripts.
 ### [ton-env.sh](./roles/monitoring_agent/files/../templates/ton-env.j2)
