@@ -141,7 +141,7 @@
 
 [[inputs.exec]]
   ## Commands array
-  commands = ["/opt/freeton/scripts/ton-depool-balance.sh"]
+  commands = ["{{ freeton_node_scripts }}/ton-depool-balance.sh"]
 
   ## override the default metric name of "exec"
   name_override = "ton-depool-balance"
@@ -155,7 +155,7 @@
 
 [[inputs.exec]]
   ## Commands array
-  commands = ["/opt/freeton/scripts/ton-depool-proxy-1-balance.sh"]
+  commands = ["{{ freeton_node_scripts }}/ton-depool-proxy-1-balance.sh"]
 
   ## override the default metric name of "exec"
   name_override = "ton-depool-proxy-1-balance"
@@ -169,7 +169,7 @@
 
 [[inputs.exec]]
   ## Commands array
-  commands = ["/opt/freeton/scripts/ton-depool-proxy-2-balance.sh"]
+  commands = ["{{ freeton_node_scripts }}/ton-depool-proxy-2-balance.sh"]
 
   ## override the default metric name of "exec"
   name_override = "ton-depool-proxy-2-balance"
@@ -183,7 +183,7 @@
 
 [[inputs.exec]]
   ## Commands array
-  commands = ["/opt/freeton/scripts/ton-wallet-balance.sh"]
+  commands = ["{{ freeton_node_scripts }}/ton-wallet-balance.sh"]
 
   ## override the default metric name of "exec"
   name_override = "ton-wallet-balance"
@@ -197,7 +197,7 @@
   
 [[inputs.exec]]
   ## Commands array
-  commands = ["/opt/freeton/scripts/ton-wallet-transaction-count.sh"]
+  commands = ["{{ freeton_node_scripts }}/ton-wallet-transaction-count.sh"]
 
   ## override the default metric name of "exec"
   name_override = "ton-wallet-unsign-transaction-count"
@@ -212,7 +212,7 @@
   
 [[inputs.exec]]
   ## Commands array
-  commands = ["/opt/freeton/scripts/ton-node-participant-state.sh"]
+  commands = ["{{ freeton_node_scripts }}/ton-node-participant-state.sh"]
 
   ## override the default metric name of "exec"
   name_override = "ton-node-participant-state"
@@ -227,7 +227,7 @@
 
 [[inputs.exec]]
   ## Commands array
-  commands = ["/opt/freeton/scripts/ton-node-validate-current.sh"]
+  commands = ["{{ freeton_node_scripts }}/ton-node-validate-current.sh"]
 
   ## override the default metric name of "exec"
   name_override = "ton-node-validate-current"
@@ -241,7 +241,7 @@
 
 [[inputs.exec]]
   ## Commands array
-  commands = ["/opt/freeton/scripts/ton-node-validate-next.sh"]
+  commands = ["{{ freeton_node_scripts }}/ton-node-validate-next.sh"]
 
   ## override the default metric name of "exec"
   name_override = "ton-node-validate-next"
