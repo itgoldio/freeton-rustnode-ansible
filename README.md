@@ -107,6 +107,19 @@ You can see our grafana dashboard by address `http://<monitoring_server_ip>:8888
 
 ![dashboadr](docs/chronograf-1.png?raw=true "chronograf-1")
 
+- show current timediff and timediff graph
+- Current Election state (Started/Stopped)
+- Current Election date start (date or undefine if elector don’t started)
+- Current Election date stop (date or undefine if elector don’t started)
+- Info, that node already in participant list
+- info, that node already win election and wait new validation cycle
+- count of unsign transaction between wallet to depool
+- Wallet balance
+- depool balance
+- proxy-1 balance
+- proxy-2 balance
+- many system graphs, we change it after testing node in rustcup
+
 You can see or change credentials in vars/[monitoring.yml](./vars/monitoring.yml)
 
 ---
