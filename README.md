@@ -123,6 +123,51 @@ You can see our chronograf dashboard by address `http://<monitoring_server_ip>:8
 You can see or change credentials in vars/[monitoring.yml](./vars/monitoring.yml)
 
 ---
+## Alerting
+You can use grafana alerts for alerting
+
+1. Create notification channel
+
+Go to `http://<monitoring_server_ip>:3000/alerting/notifications` and create notification channel.
+You can use telegram, slack, email, webhook and others
+2. Create alert 
+- Go to dashboard
+- Edit dashboard panel
+- select tab Alert
+
+more info here: https://grafana.com/docs/grafana/latest/alerting/create-alerts/
+
+---
+## Automate staking through depool
+You need to put your keys and data to `/home/freeton/ton-keys`:
+- $HOSTNAME.addr file with wallet address
+- depool.addr file with depool address
+- msig.keys.json file with private key for wallet
+- *[Optional]* msig2.keys.json file with private key for second sign
+- tik.addr wallet addr for send ticktock request to depool. You can put $HOSTNAME.addr data to here
+- tik.keys.json file with private key for tik.addr
+
+TIP: you can change default location for keys in vars/[freeton_node.yml](./vars/freeton_node.yml) 
+
+Add several scripts to crontab use
+`crontab -e -u freeton`
+
+### Automate ticktock depool
+add to cron\
+`*/3 * * * * /bin/bash && export PATH=$PATH:/opt/freeton/scripts &&  cd /opt/freeton/scripts && ton-depool-ticktok.sh >> /opt/freeton/logs/crontab-ton-depool-ticktok.log`\
+it will ticktock dpool once by election cycle
+
+### Automate send validation request
+add to cron\
+`*/10 * * * * /bin/bash && export PATH=$PATH:/opt/freeton/scripts &&  cd /opt/freeton/scripts && ton-depool-validation-request.sh >> /opt/freeton/logs/crontab-ton-depool-validation-request.log`\
+it will ticktock dpool once by election cycle
+
+### *[Optional]* Sing transaction use secondary key
+If you use wallet with RegConfirm = 2, you can sing transaction from wallet to depool use secondary key
+add to cron\
+`*/10 * * * * /bin/bash && export PATH=$PATH:/opt/freeton/scripts &&  cd /opt/freeton/scripts && ton-wallet-transaction-confirm.sh >> /opt/freeton/logs/crontab-ton-wallet-transaction-confirm.log`
+
+---
 ## Scripts
 All scripts will be added to PATH for freeton user. Monitoring use several scripts.
 ### [ton-env.sh](./roles/monitoring_agent/files/../templates/ton-env.j2)
@@ -169,37 +214,7 @@ Script return info about next validation round.
 - False - node can't validate in next round
 
 ---
-## Automate staking through depool
-You need to put your keys and data to `/home/freeton/ton-keys`:
-- $HOSTNAME.addr file with wallet address
-- depool.addr file with depool address
-- msig.keys.json file with private key for wallet
-- *[Optional]* msig2.keys.json file with private key for second sign
-- tik.addr wallet addr for send ticktock request to depool. You can put $HOSTNAME.addr data to here
-- tik.keys.json file with private key for tik.addr
 
-TIP: you can change default location for keys in vars/[freeton_node.yml](./vars/freeton_node.yml) 
-
-Add several scripts to crontab use
-`crontab -e -u freeton`
-
-### Automate ticktock depool
-add to cron\
-`*/3 * * * * /bin/bash && export PATH=$PATH:/opt/freeton/scripts &&  cd /opt/freeton/scripts && ton-depool-ticktok.sh >> /opt/freeton/logs/crontab-ton-depool-ticktok.log`\
-it will ticktock dpool once by election cycle
-
-### Automate send validation request
-add to cron\
-`*/10 * * * * /bin/bash && export PATH=$PATH:/opt/freeton/scripts &&  cd /opt/freeton/scripts && ton-depool-validation-request.sh >> /opt/freeton/logs/crontab-ton-depool-validation-request.log`\
-it will ticktock dpool once by election cycle
-
-### *[Optional]* Sing transaction use secondary key
-If you use wallet with RegConfirm = 2, you can sing transaction from wallet to depool use secondary key
-add to cron\
-`*/10 * * * * /bin/bash && export PATH=$PATH:/opt/freeton/scripts &&  cd /opt/freeton/scripts && ton-wallet-transaction-confirm.sh >> /opt/freeton/logs/crontab-ton-wallet-transaction-confirm.log`
-
-
----
 ## Support
 We can help you in telegram chats
 - RU: https://t.me/itgoldio_support_ru
