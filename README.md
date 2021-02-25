@@ -103,10 +103,6 @@ You can see our grafana dashboard by address `http://<monitoring_server_ip>:3000
 
 ![dashboadr](docs/grafana-1.png?raw=true "grafana-1")
 
-You can see our grafana dashboard by address `http://<monitoring_server_ip>:8888/`
-
-![dashboadr](docs/chronograf-1.png?raw=true "chronograf-1")
-
 - show current timediff and timediff graph
 - Current Election state (Started/Stopped)
 - Current Election date start (date or undefine if elector don’t started)
@@ -119,6 +115,10 @@ You can see our grafana dashboard by address `http://<monitoring_server_ip>:8888
 - proxy-1 balance
 - proxy-2 balance
 - many system graphs, we change it after testing node in rustcup
+
+You can see our chronograf dashboard by address `http://<monitoring_server_ip>:8888/`
+
+![dashboadr](docs/chronograf-1.png?raw=true "chronograf-1")
 
 You can see or change credentials in vars/[monitoring.yml](./vars/monitoring.yml)
 
