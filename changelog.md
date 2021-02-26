@@ -1,3 +1,5 @@
+## 1.3.1
+- implemented statsd metrics collector with grafana dashboard
 ## 1.3
 - add support for Debian 10, CentOS 8 and Oracle Linux 8
 - set environment flags for rust compiler (use hardware realization of aes instead of software)

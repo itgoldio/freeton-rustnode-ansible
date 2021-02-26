@@ -77,7 +77,7 @@
     - name: Update repo deps | freeton node
       command: '{{ ansible_env.HOME }}/.cargo/bin/cargo update --manifest-path {{ freeton_node_src_dir }}/freeton_node/Cargo.toml'
     - name: Build repo | freeton node
-      command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/freeton_node/Cargo.toml --target-dir {{ freeton_node_src_dir }} --release'
+      command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/freeton_node/Cargo.toml --target-dir {{ freeton_node_src_dir }} --release{% if freeton_node_metrics_enabled == true %} --features metrics{% endif %}'
   when: freeton_node_sources.changed or freeton_node_force_recompile
   environment:
     RUSTFLAGS: "{{ rust_flags }}"

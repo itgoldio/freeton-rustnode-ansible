@@ -4,8 +4,8 @@
 ## Compatibility
 
 #### Minimum OS versions:
-Ubuntu: 18.04
-Debian: 10
+Ubuntu: 18.04\
+Debian: 10\
 CentOS, Oracle Linux: 8
 
 #### Ansible version
@@ -131,6 +131,13 @@ You can see our chronograf dashboard on next address `http://<monitoring_server_
 ![dashboard](docs/chronograf-1.png?raw=true "chronograf-1")
 
 You can see or change credentials in vars/[monitoring.yml](./vars/monitoring.yml)
+
+---
+## StatsD metrics
+We support builded in freeton rust node StatsD service. It is disabled by default, to turn it on change `freeton_node_metrics_enabled` to True in vars/[freeton_node.yml](./vars/freeton_node.yml). When you enable it you will able to use grafana dashboard: 
+![dashboard](docs/grafana-2.png?raw=true "grafana-2")
+
+`http://<monitoring_server_ip>:3000/d/ton-3/freeton-statsd-metrics`
 
 ---
 ## Alerting

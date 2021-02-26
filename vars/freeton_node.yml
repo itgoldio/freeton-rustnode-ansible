@@ -26,6 +26,9 @@ tvm_linker_github_commit_id: "master"
 # Recompile binary without sources changes: false|true
 tvm_linker_force_recompile: false
 
+# Compile freeton_node with metrics enabled - powered by statsd service it will send stats to influxdb (grafana): false|true
+freeton_node_metrics_enabled: false
+
 # Default user and group names
 freeton_node_user: "freeton"
 freeton_node_group: "freeton"
