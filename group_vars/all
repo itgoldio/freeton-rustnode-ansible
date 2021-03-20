@@ -3,6 +3,12 @@
 
 os_valid_distributions:
   - Ubuntu
+  - CentOS
+  - OracleLinux
+  - Debian
 
 os_minimum_versions:
   Ubuntu: 18.04
+  CentOS: 8
+  OracleLinux: 8
+  Debian: 10

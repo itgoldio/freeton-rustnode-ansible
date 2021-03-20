@@ -18,40 +18,8 @@
     name: "{{ timezone }}"
   when: timezone is defined and timezone | length > 0
 
-- name: Install system packages
-  package:
-    name:
-      - vim
-      - mc
-      - htop
-      - rsyslog
-      - apt-transport-https
-      - wget
-      - gnupg
-      - ca-certificates
-      - curl
-      - dnsutils
-      - jq
-      - acl
-    state: present
-    update_cache: yes
-    cache_valid_time: 3600
-
-- block:
-    - name: Install ntp package
-      package:
-        name: ntp
-        state: present
-        update_cache: yes
-      when: ansible_os_family == "Debian"
-
-    - name: Copy the ntp.conf file
-      template:
-        src: ntp.conf.j2
-        dest: /etc/ntp.conf
-      notify: "restart ntp"
-      when: ansible_os_family == "Debian"
-  when: ntp_enabled is defined and ntp_enabled|bool
+- name: Include os specific tasks
+  include_tasks: "{{ ansible_pkg_mgr }}.yml"
 
 - name: Linux PAM limits | add or modify nofile limits
   pam_limits:

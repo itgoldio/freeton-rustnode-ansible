@@ -1,0 +1,31 @@
+- name: Install system packages
+  dnf:
+    name:
+      - "@Development tools"
+      - openssl-devel
+      - clang
+      - cmake
+    state: latest
+
+- name: Add {{ freeton_node_scripts }} to PATH env
+  lineinfile:
+    dest: /etc/profile.d/sh.local
+    state: present
+    line: "PATH=$PATH:{{ freeton_node_scripts }}:{{ freeton_node_tools_dir }}"
+
+- name: Checking firewalld status
+  command: systemctl status firewalld
+  ignore_errors: yes
+  register: firewalld_node_state
+
+- name: Open freeton node ports with firewalld
+  firewalld:
+    immediate: yes
+    permanent: yes
+    port: "{{ item }}"
+    state: enabled
+    zone: public
+  loop:
+    - "30303/udp"
+    - "4925/tcp"
+  when: "'active (running)' in firewalld_node_state.stdout"

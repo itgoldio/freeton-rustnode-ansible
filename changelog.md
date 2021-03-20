@@ -1,3 +1,32 @@
+## 1.3.1
+- implemented statsd metrics collector with grafana dashboard
+## 1.3
+- add support for Debian 10, CentOS 8 and Oracle Linux 8
+- set environment flags for rust compiler (use hardware realization of aes instead of software)
+- added new features to grafana dashboard
+- improvements in shell scripts
+## 1.2.11
+there's no need to exec sed twice for scripts ton-node-validate-next.sh, ton-node-validate-current.s
+restart freeton node always if something happend (old value is on-failure)
+
+## 1.2.10
+- add missing data to ton-node-participant-state.sh
+- ton-depool-validation-request.sh store info that validation request was send
+
+## 1.2.9
+fix wrong vars in 
+- ton-election-date-end.sh
+- ton-election-date-start.sh
+- ton-election-state.sh
+
+
+## 1.2.8
+refactoring scripts for work with rustcup elector 
+add more info into readme
+
+## 1.2.7
+fix ton-depool-validation-request.sh, check vnext not curr list 
+
 ## 1.2.6
 add script ton-node-validate-current.sh
 add script ton-node-validate-next.sh

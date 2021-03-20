@@ -25,34 +25,10 @@
     state: directory
     owner: "{{ freeton_node_user }}"
     group: "{{ freeton_node_group }}"
-    mode: u=rwx,g=,o=
+    mode: u=rwx,g=rx,o=
 
-- name: Add {{ freeton_node_scripts }} to PATH env
-  lineinfile:
-    dest: /etc/environment
-    state: present
-    backrefs: yes
-    regexp: 'PATH=(["]*)((?!.*?{{ freeton_node_scripts }}:{{ freeton_node_tools_dir }}).*?)(["]*)$'
-    line: "PATH=\\1\\2:{{ freeton_node_scripts }}:{{ freeton_node_tools_dir }}\\3"
-
-- name: Install freeton compile dependencies
-  package:
-    name:
-      - git
-      - libssl-dev
-      - pkg-config
-      - build-essential
-      - autoconf
-      - automake
-      - m4
-      - cmake
-      - libtool
-      - clang
-      - tar
-      - gpg
-    state: present
-    update_cache: yes
-    cache_valid_time: 3600
+- name: Include os specific tasks
+  include_tasks: "{{ ansible_pkg_mgr }}.yml"
 
 - name: Download Rust init
   get_url:
@@ -101,8 +77,10 @@
     - name: Update repo deps | freeton node
       command: '{{ ansible_env.HOME }}/.cargo/bin/cargo update --manifest-path {{ freeton_node_src_dir }}/freeton_node/Cargo.toml'
     - name: Build repo | freeton node
-      command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/freeton_node/Cargo.toml --target-dir {{ freeton_node_src_dir }} --release'
+      command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/freeton_node/Cargo.toml --target-dir {{ freeton_node_src_dir }} --release{% if freeton_node_metrics_enabled == true %} --features metrics{% endif %}'
   when: freeton_node_sources.changed or freeton_node_force_recompile
+  environment:
+    RUSTFLAGS: "{{ rust_flags }}"
 
 - name: Build freeton node tools
   block:
@@ -111,6 +89,8 @@
     - name: Build repo | node tools
       command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/freeton_node_tools/Cargo.toml --target-dir {{ freeton_node_src_dir }} --release'
   when: freeton_node_tools_sources.changed or freeton_node_tools_force_recompile
+  environment:
+    RUSTFLAGS: "{{ rust_flags }}"
 
 - name: Build tonos cli
   block:
@@ -119,6 +99,8 @@
     - name: Build repo | tonos cli
       command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/tonos_cli/Cargo.toml --target-dir {{ freeton_node_src_dir }} --release'
   when: tonos_cli_sources.changed or tonos_cli_force_recompile
+  environment:
+    RUSTFLAGS: "{{ rust_flags }}"
 
 - name: Build tvm linker
   block:
@@ -127,3 +109,5 @@
     - name: Build repo | tvm linker
       command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/tvm_linker/tvm_linker/Cargo.toml --target-dir {{ freeton_node_src_dir }} --release'
   when: tvm_linker_sources.changed or tvm_linker_force_recompile
+  environment:
+    RUSTFLAGS: "{{ rust_flags }}"

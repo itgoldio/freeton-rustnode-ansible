@@ -1,0 +1,33 @@
+- name: Install freeton compile dependencies
+  apt:
+    name:
+      - git
+      - libssl-dev
+      - pkg-config
+      - build-essential
+      - autoconf
+      - automake
+      - m4
+      - cmake
+      - libtool
+      - clang
+      - tar
+      - gpg
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Add {{ freeton_node_scripts }} to PATH env
+  lineinfile:
+    dest: /etc/environment
+    state: present
+    backrefs: yes
+    regexp: 'PATH=(["]*)((?!.*?{{ freeton_node_scripts }}:{{ freeton_node_tools_dir }}).*?)(["]*)$'
+    line: "PATH=\\1\\2:{{ freeton_node_scripts }}:{{ freeton_node_tools_dir }}\\3"
+  when: ansible_facts['distribution'] == "Ubuntu"
+
+- name: Add {{ freeton_node_scripts }} to PATH env
+  template:
+    src: "freeton_env.sh.j2"
+    dest: "/etc/profile.d/freeton_env.sh"
+  when: ansible_facts['distribution'] == "Debian"

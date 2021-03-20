@@ -5,6 +5,7 @@
 
 TON_ELECTION_PROXY_FILE_NAME="proxy.addr"
 TON_ELECTION_DEPOOL_EVENTS_FILE_NAME="depool-events"
+TON_ELECTION_DEPOOL_VALIDATION_REQ_SENDED="validation.request.sended"
 
 ton-check-env.sh TON_CLI_CONFIG
 ton-check-env.sh DEPOOL_ADDR
@@ -37,44 +38,38 @@ if (( $ELECTION_DATE_END == -1 ));
         exit 0
 fi
 
+CURRENT_UNIXTIME=$(date +%s)
 
-CURRENT_TIME=$(date +%s)
-
-if [[ $CURRENT_TIME > $ELECTION_DATE_START && $ELECTION_DATE_END > $CURRENT_TIME ]]; then
+if [[ $CURRENT_UNIXTIME > $ELECTION_DATE_START && $ELECTION_DATE_END > $CURRENT_UNIXTIME ]]; then
    :
 else
    echo "ERROR: election ended or don't start"
    exit 1
 fi
 
-# get elector address
-ELECTOR_ADDR="-1:$($TON_CLI -c $TON_CLI_CONFIG  getconfig 1 | grep 'p1:' | sed 's/Config p1:[[:space:]]*//g' | tr -d \")"
+ELECTIONS_DATE=$(ton-election-date.sh)
+if [ $ELECTIONS_DATE = "-1" ]; then
+   echo "ERROR: Can't get election date"
+   exit
+fi
 
-# get elector start (unixtime)
-ELECTIONS_DATE=$($TON_CLI -c $TON_CLI_CONFIG runget $ELECTOR_ADDR active_election_id  | grep 'Result:' | sed 's/Result:[[:space:]]*//g' | tr -d \"[])
-
-
-## hotfix try to use new solidity contract for rustnet.ton.dev
-if [ -z $ELECTIONS_DATE ]; then
-
-   ELECTION_RESULT=`$TON_CLI -c $TON_CLI_CONFIG run $ELECTOR_ADDR active_election_id {} --abi $TON_CONTRACT_ELECTOR_ABI`
-   ELECTIONS_DATE=$(echo $ELECTION_RESULT | awk -F'Result: ' '{print $2}' | jq -r '.value0'  )
+if [ $ELECTIONS_DATE = "0" ]; then
+   echo "INFO: Election is not started"
+   exit
 fi
 
 echo "INFO: eclection is active"
 
-
 ##=================
-## region: CHECK ALREADY PARTICIPANT
+## region: CHECK ALREADY IN VNEXT
 ##=================
 
-ALREADY_VNEXT_LIST=$(ton-node-validate-current.sh)
+ALREADY_VNEXT_LIST=$(ton-node-validate-next.sh)
 if [ $ALREADY_VNEXT_LIST == "True" ]
    then
         echo "INFO: already in vnext list"
         exit 0
 fi;
-
 
 ##=================
 ## region: CHECK UNCOMPLITE TRANSACTION
@@ -95,6 +90,16 @@ TON_ELECTION_SUBFOLDER="$TON_ELECTION_FOLDER/$ELECTIONS_DATE"
 if [ ! -d $TON_ELECTION_SUBFOLDER ]; then
    mkdir $TON_ELECTION_SUBFOLDER
 fi
+
+##=================
+## region: CHECK validation request sended
+##=================
+
+if [ -f $TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_VALIDATION_REQ_SENDED ]; then
+   echo "INFO: request already sended, see $TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_VALIDATION_REQ_SENDED"
+   exit
+fi
+
 
 if [ ! -f $TON_ELECTION_SUBFOLDER/$TON_ELECTION_PROXY_FILE_NAME ]; then
    TON_DEPOOL_EVENTS=$($TON_CLI -c $TON_CLI_CONFIG depool --addr $DEPOOL_ADDR  events)
@@ -150,4 +155,13 @@ fi
 
 TON_PAYLOAD=$(base64 --wrap=0 "${TON_ELECTION_SUBFOLDER}/validator-query.boc")
 
-$TON_CLI -c $TON_CLI_CONFIG call $VALIDATOR_WALLET_ADDR submitTransaction "{\"dest\":\"$DEPOOL_ADDR\",\"value\":\"1000000000\",\"bounce\":true,\"allBalance\":false,\"payload\":\"$TON_PAYLOAD\"}" --abi $TON_CONTRACT_SAFEMULTISIGWALLET_ABI --sign $VALIDATOR_WALLET_PRV_KEY_1
+TON_VALIDATOR_QUERY_SEND_RESULT=$($TON_CLI -c $TON_CLI_CONFIG call $VALIDATOR_WALLET_ADDR submitTransaction "{\"dest\":\"$DEPOOL_ADDR\",\"value\":\"1000000000\",\"bounce\":true,\"allBalance\":false,\"payload\":\"$TON_PAYLOAD\"}" --abi $TON_CONTRACT_SAFEMULTISIGWALLET_ABI --sign $VALIDATOR_WALLET_PRV_KEY_1)
+
+echo "$TON_VALIDATOR_QUERY_SEND_RESULT"
+
+TON_VALIDATOR_QUERY_SEND_RESULT_SUCCESS=$(echo "$TON_VALIDATOR_QUERY_SEND_RESULT" | grep "transId")
+
+if [ ! -z "$TON_VALIDATOR_QUERY_SEND_RESULT_SUCCESS" ]; then
+   echo "$TON_VALIDATOR_QUERY_SEND_RESULT" > "$TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_VALIDATION_REQ_SENDED"
+fi
+
