@@ -48,7 +48,7 @@ if [ -f $TON_ELECTION_SUBFOLDER/$TON_ELECTION_TICKTOK_IS_SENDED ]; then
    exit
 fi
    
-DEPOOL_TICKTOK_RESULT="$($TON_CLI -c $TON_CLI_CONFIG depool --addr $DEPOOL_ADDR ticktock -w $TIK_ADDR -s $TIK_PRV_KEY)"
+DEPOOL_TICKTOK_RESULT="$($TON_CLI -c $TON_CLI_CONFIG depool --addr $DEPOOL_ADDR --no-answer ticktock -w $TIK_ADDR -s $TIK_PRV_KEY)"
 
 DEPOOL_TICKTOK_TRANSACTION_ID="$(echo $DEPOOL_TICKTOK_RESULT | awk -F'Result: ' '{print $2}' | jq -r '.transId')"
 if [ -z "$DEPOOL_TICKTOK_TRANSACTION_ID" ];then

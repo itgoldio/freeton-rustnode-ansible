@@ -1,10 +1,15 @@
+## 1.4.0
+support new keys for tonos_cli in ton-depool-ticktok.sh
+
 ## 1.3.1
 - implemented statsd metrics collector with grafana dashboard
+
 ## 1.3
 - add support for Debian 10, CentOS 8 and Oracle Linux 8
 - set environment flags for rust compiler (use hardware realization of aes instead of software)
 - added new features to grafana dashboard
 - improvements in shell scripts
+
 ## 1.2.11
 there's no need to exec sed twice for scripts ton-node-validate-next.sh, ton-node-validate-current.s
 restart freeton node always if something happend (old value is on-failure)
