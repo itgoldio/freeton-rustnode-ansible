@@ -44,7 +44,7 @@ if [ ! -d $TON_ELECTION_SUBFOLDER ]; then
 fi
 
 if [ -f $TON_ELECTION_SUBFOLDER/$TON_ELECTION_TICKTOK_IS_SENDED ]; then
-   echo "INFO: ticktok already sended"
+   echo "INFO: ticktok has been sent already"
    exit
 fi
    
