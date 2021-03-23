@@ -1,3 +1,5 @@
+## 1.4.2
+- added -t option to ticktock script to do ticktock until success
 ## 1.4.1
 - fixed telegraf exec's timeouts and config rights
 - reduce verbosity of freeton node

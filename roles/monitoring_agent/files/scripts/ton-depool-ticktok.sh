@@ -18,6 +18,22 @@ if [ $# == 1 ];then
        $TON_CLI -c $TON_CLI_CONFIG depool --addr $DEPOOL_ADDR ticktock -w $TIK_ADDR -s $TIK_PRV_KEY
        exit
     fi
+   if [ $1 = '-t' ] || [ $1 = '-try' ];then
+     set +e
+     COUNTER=0
+     echo "INFO: try until success mod"
+     while [  $COUNTER -lt 10 ];
+     do
+       $TON_CLI -c $TON_CLI_CONFIG depool --addr $DEPOOL_ADDR ticktock -w $TIK_ADDR -s $TIK_PRV_KEY
+       if [ $? -eq 0 ]; then
+        break
+       fi
+       let COUNTER=COUNTER+1
+       echo "INFO: trying $COUNTER times..."
+       sleep 60
+     done
+     exit
+   fi
 fi
 
 #check election data
