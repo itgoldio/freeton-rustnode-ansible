@@ -124,7 +124,6 @@
     owner: "{{ freeton_node_user }}"
     group: "{{ freeton_node_group }}"
     mode: u=rw,g=r,o=
-  notify: freeton_systemd
 
 - name: Copy freeton systemd service environment variables
   copy:
