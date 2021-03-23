@@ -1,3 +1,6 @@
+## 1.4.1
+- fixed telegraf exec's timeouts and config rights
+- reduce verbosity of freeton node
 ## 1.4.0
 support new keys for tonos_cli in ton-depool-ticktok.sh
 

@@ -217,7 +217,7 @@
     state: file
     owner: "{{ freeton_node_user }}"
     group: "{{ freeton_node_group }}"
-    mode: u=rw,g=,o=
+    mode: u=rw,g=r,o=
   loop:
     - "{{ freeton_node_config_dir }}/{{ ansible_hostname }}_client_keys.json"
     - "{{ freeton_node_config_dir }}/config.json"
