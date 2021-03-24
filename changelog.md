@@ -1,3 +1,7 @@
+
+## 1.4.4
+- update ton-depool-ticktok.sh - fix wrong calculation 
+
 ## 1.4.3
 - update ton-depool-ticktok.sh - don't send ticktok if election started recently 
 
