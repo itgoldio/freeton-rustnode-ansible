@@ -2,6 +2,9 @@
 
 
 TON_ELECTION_TICKTOK_IS_SENDED="depool.ticktock.sended"
+# 60 sec delay in depool smartcontract
+# i wait 100 sec for safely
+TON_DEPOOL_ELECTOR_UNFREEZE_LAG_SEC=100
 
 # export ton environments
 . ton-env.sh
@@ -58,6 +61,14 @@ TON_ELECTION_SUBFOLDER="$TON_ELECTION_FOLDER/$ELECTIONS_DATE"
 if [ ! -d $TON_ELECTION_SUBFOLDER ]; then
    mkdir $TON_ELECTION_SUBFOLDER
 fi
+
+NOW=$(date +%s)
+TICKTOK_MIN_TIME_TO_SEND=$(($ELECTIONS_DATE + $TON_DEPOOL_ELECTOR_UNFREEZE_LAG_SEC))
+if [ $NOW -lt $TICKTOK_MIN_TIME_TO_SEND ]; then
+   echo "INFO: wait $TON_DEPOOL_ELECTOR_UNFREEZE_LAG_SEC after election started"
+   exit
+fi
+
 
 if [ -f $TON_ELECTION_SUBFOLDER/$TON_ELECTION_TICKTOK_IS_SENDED ]; then
    echo "INFO: ticktok has been sent already"

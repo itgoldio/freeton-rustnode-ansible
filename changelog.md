@@ -1,8 +1,13 @@
+## 1.4.3
+- update ton-depool-ticktok.sh - don't send ticktok if election started recently 
+
 ## 1.4.2
 - added -t option to ticktock script to do ticktock until success
+
 ## 1.4.1
 - fixed telegraf exec's timeouts and config rights
 - reduce verbosity of freeton node
+
 ## 1.4.0
 support new keys for tonos_cli in ton-depool-ticktok.sh
 
