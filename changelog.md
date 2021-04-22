@@ -1,10 +1,29 @@
+
+## 1.4.4
+- update ton-depool-ticktok.sh - fix wrong calculation 
+
+## 1.4.3
+- update ton-depool-ticktok.sh - don't send ticktok if election started recently 
+
+## 1.4.2
+- added -t option to ticktock script to do ticktock until success
+
+## 1.4.1
+- fixed telegraf exec's timeouts and config rights
+- reduce verbosity of freeton node
+
+## 1.4.0
+support new keys for tonos_cli in ton-depool-ticktok.sh
+
 ## 1.3.1
 - implemented statsd metrics collector with grafana dashboard
+
 ## 1.3
 - add support for Debian 10, CentOS 8 and Oracle Linux 8
 - set environment flags for rust compiler (use hardware realization of aes instead of software)
 - added new features to grafana dashboard
 - improvements in shell scripts
+
 ## 1.2.11
 there's no need to exec sed twice for scripts ton-node-validate-next.sh, ton-node-validate-current.s
 restart freeton node always if something happend (old value is on-failure)

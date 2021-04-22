@@ -58,7 +58,7 @@ if [ $ELECTIONS_DATE = "0" ]; then
    exit
 fi
 
-echo "INFO: eclection is active"
+echo "INFO: election is active"
 
 ##=================
 ## region: CHECK ALREADY IN VNEXT
@@ -107,7 +107,8 @@ if [ ! -f $TON_ELECTION_SUBFOLDER/$TON_ELECTION_PROXY_FILE_NAME ]; then
 
    TON_PROXY=$(echo "$TON_DEPOOL_EVENTS" | grep $ELECTIONS_DATE | jq ".proxy")
    if [ -z $TON_PROXY  ]; then
-      echo "ERROR: can't find proxy, see events in $TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_EVENTS_FILE_NAME"
+      echo "ERROR: can't find proxy, see events $TON_DEPOOL_EVENTS"
+      rm $TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_EVENTS_FILE_NAME
       exit 1
    fi
 
