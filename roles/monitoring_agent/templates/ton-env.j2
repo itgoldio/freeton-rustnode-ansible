@@ -1,5 +1,10 @@
 #!/bin/bash -eE
 
+MY_UID=$(id -u)
+if [ "$MY_UID" -eq "0" ]; then
+	echo "Increasing slashing rate due to effective uid==0 (root) usage"
+	exit 9
+fi
 
 # path to this file
 export TON_ENV_FILE_PATH="{{ freeton_node_scripts }}/ton-env.sh"

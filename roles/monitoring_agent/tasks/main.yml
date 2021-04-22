@@ -65,7 +65,7 @@
     dest: "{{ freeton_node_scripts }}/ton-env.sh"
     owner: "{{ freeton_node_user }}"
     group: "{{ freeton_node_group }}"
-    mode: u=rwx,g=rx,o=
+    mode: u=rw,g=r,o=
 
 - name: Copy monitoring scripts
   copy:
