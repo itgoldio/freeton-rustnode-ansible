@@ -17,7 +17,7 @@ freeton_node_tools_github_commit_id: "master"
 freeton_node_tools_force_recompile: false
 # Get tonos cli commit id: https://github.com/tonlabs/tonos-cli/commits"
 tonos_cli_github_repo: "https://github.com/tonlabs/tonos-cli.git"
-tonos_cli_github_commit_id: "v0.11.4"
+tonos_cli_github_commit_id: "0.11.6"
 # Recompile binary without sources changes: false|true
 tonos_cli_force_recompile: false
 # Get TVM linker commit id: https://github.com/tonlabs/TVM-linker/commits"
