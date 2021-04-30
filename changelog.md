@@ -1,3 +1,5 @@
+## 1.4.5
+- set tonos cli version to v0.11.1
 
 ## 1.4.4
 - update ton-depool-ticktok.sh - fix wrong calculation 
