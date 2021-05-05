@@ -1,3 +1,8 @@
+## 1.4.6
+- set tonos cli version 0.11.6
+- add TON_IS_RUSTNET var to ton-env.sh
+- improve ton-node-participant-state.sh
+
 ## 1.4.5
 - set tonos cli version to v0.11.1
 
