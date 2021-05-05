@@ -54,6 +54,12 @@ if [[ $TON_VALIDATOR_KEYS_COUNT == 0 ]]; then
    exit 0
 fi
 
+if [ $TON_IS_RUSTNET -eq 1 ]; then
+   get_participants_rustcup
+else
+   get_election_date
+fi
+
 for (( i=0; i<$TON_VALIDATOR_KEYS_COUNT; i++ ))
 do  
    TON_KEYS_FOR_ELECTION_ID=$(cat $TON_NODE_CONFIG | jq ".validator_keys[$i].election_id")
@@ -62,16 +68,6 @@ do
 
       TON_ADNL_KEY_HASH=$(cat $TON_NODE_CONFIG | jq ".validator_keys[$i].validator_key_id"| tr -d \")
       TON_ADNL_KEY="$($TON_CONSOLE -C $TON_CONSOLE_CONFIG -c "exportpub $TON_ADNL_KEY_HASH" | awk -F"imported key:" '{print $2}' | awk -F" " '{print $1}' )"
-      
-      #get dapp
-      TON_DAPP=$(cat $TON_CLI_CONFIG | jq -r '.url')
-
-      if [ $TON_DAPP = "https://rustnet.ton.dev" ]; then
-         get_participants_rustcup
-      else
-         get_election_date
-      fi
-
       TON_ADNL_KEY_FROM_ELECTOR=$( echo "$TON_PARTICIPANTS_CURRENT"  | grep $TON_ADNL_KEY)
 
       if [ -z "$TON_ADNL_KEY_FROM_ELECTOR" ]; then

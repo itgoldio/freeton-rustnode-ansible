@@ -22,10 +22,7 @@ get_election_date_rustcup ()
 # get elector address
 ELECTOR_ADDR="-1:$($TON_CLI -c $TON_CLI_CONFIG  getconfig 1 | grep 'p1:' | sed 's/Config p1:[[:space:]]*//g' | tr -d \")"
 
-#get dapp
-TON_DAPP=$(cat $TON_CLI_CONFIG | jq -r '.url')
-
-if [ $TON_DAPP = "https://rustnet.ton.dev" ]; then
+if [ $TON_IS_RUSTNET -eq 1 ]; then
    get_election_date_rustcup
 else
    get_election_date

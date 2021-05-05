@@ -1,5 +1,9 @@
 #!/bin/bash -eE
 
+# it is rustnet
+# 0 = false
+# 1 = true
+export TON_IS_RUSTNET={% if freeton_node_global_config_URL == "https://raw.githubusercontent.com/tonlabs/rustnet.ton.dev/main/configs/ton-global.config.json" %}1{% else %}0{% endif %}
 
 # path to this file
 export TON_ENV_FILE_PATH="{{ freeton_node_scripts }}/ton-env.sh"
