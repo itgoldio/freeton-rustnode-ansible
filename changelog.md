@@ -1,3 +1,7 @@
+## 1.4.7
+- fix permissions on freeton user home folder
+- correct telegraf exec timeouts
+
 ## 1.4.6
 - set tonos cli version 0.11.6
 - add TON_IS_RUSTNET var to ton-env.sh

@@ -9,6 +9,7 @@
     mode: u=rwx,g=rx,o=
   loop:
     - "/opt/freeton"
+    - "/home/{{ freeton_node_user }}"
     - "{{ freeton_node_bin_dir }}"
     - "{{ freeton_node_src_dir }}"
     - "{{ freeton_node_work_dir }}"
