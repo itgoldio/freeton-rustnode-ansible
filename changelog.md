@@ -1,3 +1,7 @@
+## 1.4.8
+- add -m flag to ton-node-validate-current.sh and ton-node-validate-next.sh
+it fix output for monitoring style
+
 ## 1.4.7
 - fix permissions on freeton user home folder
 - correct telegraf exec timeouts
