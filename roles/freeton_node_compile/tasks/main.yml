@@ -66,6 +66,7 @@
     repo: "{{ tvm_linker_github_repo }}"
     dest: "{{ freeton_node_src_dir }}/tvm_linker"
     version: "{{ tvm_linker_github_commit_id }}"
+    force: yes
   register: tvm_linker_sources
 
 - name: Clear debug directory
