@@ -215,6 +215,8 @@ Script return time diff in unix time for local node or "-1" if console or node d
 Script return "ACTIVE" if node already in participants list. It return "NOT_FOUND" if election is active, but node absent in participants list. Script return "UNKNOWN" if election stopped.
 ### [ton-wallet-balance.sh](./roles/monitoring_agent/files/scripts/ton-wallet-balance.sh)
 Script show wallet balance in nanotokens.
+### [ton-ticktok-balance.sh](./roles/monitoring_agent/files/scripts/ton-ticktok-balance.sh)
+Script show tick account balance in nanotokens.
 ### [ton-wallet-transaction-confirm.sh](./roles/monitoring_agent/files/scripts/ton-wallet-transaction-confirm.sh)
 Script find unsigned transaction from wallet to depool and signet it use secondary key. It use ton-env.sh vars by default. You can send wallet addr and depool addr directly as arguments.
 ### [ton-wallet-transaction-count.sh](./roles/monitoring_agent/files/scripts/ton-wallet-transaction-count.sh)
