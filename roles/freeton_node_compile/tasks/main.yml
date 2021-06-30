@@ -40,6 +40,11 @@
 - name: Install Rust
   command: '/usr/local/bin/rustup-init -y --default-toolchain {{ rustup_default_toolchain }}'
 
+- name: Get Rust version
+  command: 'rustc -V'
+  changed_when: false
+  register: rust_version
+
 - name: Get freeton node sources
   git:
     repo: "{{ freeton_node_github_repo }}"
@@ -83,6 +88,9 @@
   when: freeton_node_sources.changed or freeton_node_force_recompile
   environment:
     RUSTFLAGS: "{{ rust_flags }}"
+    RUST_VERSION: "{{ rust_version.stdout }}"
+    GC_TON_NODE: "{{ freeton_node_sources.after }}"
+
 
 - name: Build freeton node tools
   block:

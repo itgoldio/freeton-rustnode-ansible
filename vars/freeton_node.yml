@@ -4,6 +4,8 @@
 # rustnet (default): https://raw.githubusercontent.com/tonlabs/rustnet.ton.dev/main/configs/ton-global.config.json
 # fld: https://raw.githubusercontent.com/FreeTON-Network/fld.ton.dev/main/configs/fld.ton.dev/ton-global.config.json
 freeton_node_global_config_URL: "https://raw.githubusercontent.com/tonlabs/rustnet.ton.dev/main/configs/ton-global.config.json"
+# Set custom DAPP server address, leave "default" to keep it from global config. Example: https://dapp.contoso.net
+freeton_node_DAPP_address: "default"
 
 # Get freeton node commit id: https://github.com/tonlabs/ton-labs-node/commits
 freeton_node_github_repo: "https://github.com/tonlabs/ton-labs-node.git"

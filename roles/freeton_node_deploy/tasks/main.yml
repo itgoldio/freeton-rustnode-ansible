@@ -46,9 +46,15 @@
         state: absent
   when: old_db_dir.stat.isdir is defined and old_db_dir.stat.isdir
 
-- name: Set ton net URL
+- name: Set ton net URL with default DAPP server
   set_fact:
-    ton_net_url: "{% if freeton_node_global_config_URL == 'https://raw.githubusercontent.com/tonlabs/main.ton.dev/master/configs/ton-global.config.json' %}main.ton.dev{% elif freeton_node_global_config_URL == 'https://raw.githubusercontent.com/tonlabs/net.ton.dev/master/configs/net.ton.dev/ton-global.config.json' %}net.ton.dev{% elif freeton_node_global_config_URL == 'https://raw.githubusercontent.com/tonlabs/rustnet.ton.dev/main/configs/ton-global.config.json' %}rustnet.ton.dev{% elif freeton_node_global_config_URL == 'https://raw.githubusercontent.com/FreeTON-Network/fld.ton.dev/main/configs/fld.ton.dev/ton-global.config.json' %}gql.custler.net{% endif %}"
+    ton_net_url: "{% if freeton_node_global_config_URL == 'https://raw.githubusercontent.com/tonlabs/main.ton.dev/master/configs/ton-global.config.json' %}https://main.ton.dev{% elif freeton_node_global_config_URL == 'https://raw.githubusercontent.com/tonlabs/net.ton.dev/master/configs/net.ton.dev/ton-global.config.json' %}https://net.ton.dev{% elif freeton_node_global_config_URL == 'https://raw.githubusercontent.com/tonlabs/rustnet.ton.dev/main/configs/ton-global.config.json' %}https://rustnet.ton.dev{% elif freeton_node_global_config_URL == 'https://raw.githubusercontent.com/FreeTON-Network/fld.ton.dev/main/configs/fld.ton.dev/ton-global.config.json' %}https://gql.custler.net{% endif %}"
+  when: freeton_node_DAPP_address == "default"
+
+- name: Set ton net URL with custom DAPP server
+  set_fact:
+    ton_net_url: "{{ freeton_node_DAPP_address }}"
+  when: freeton_node_DAPP_address != "default"
 
 - name: Copy freeton node tools binaries
   copy:
@@ -140,7 +146,7 @@
   notify: freeton_systemd
 
 - name: Config tonos-cli
-  command: ./tonos-cli --url https://{{ton_net_url}} config
+  command: ./tonos-cli --url {{ton_net_url}} config
   args:
     chdir: "{{ freeton_node_tools_dir }}"
   become: yes

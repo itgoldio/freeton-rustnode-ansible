@@ -7,6 +7,8 @@ refresh_rate: 30 seconds
 appenders:
   rolling:
     kind: rolling_file
+    encoder:
+      pattern: "{d(%Y-%m-%d %H:%M:%S.%f)} {l} [{h({t})}] {I}: {m}{n}"
     path: {{ freeton_node_log_dir }}/node.log
     policy:
       kind: compound
@@ -28,3 +30,54 @@ root:
   level: warn
   appenders:
     - rolling
+
+loggers:
+  # node messages
+  ton_node:
+    level: warn
+  boot:
+    level: info
+  sync:
+    level: info
+  telemetry:
+    level: error
+
+  # adnl messages
+  adnl:
+    level: warn
+
+  overlay:
+    level: warn
+
+  overlay_broadcast:
+    level: warn
+
+  rldp:
+    level: warn
+
+  dht:
+    level: warn
+
+  # block messages
+  ton_block:
+    level: error
+
+  # block messages
+  executor:
+    level: error
+
+  # tvm messages
+  tvm:
+    level: error
+
+  librdkafka:
+    level: error
+
+  validator:
+    level: info
+
+  catchain:
+    level: info
+
+  validator_session:
+    level: info
