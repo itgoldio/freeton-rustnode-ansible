@@ -41,7 +41,7 @@
   command: '/usr/local/bin/rustup-init -y --default-toolchain {{ rustup_default_toolchain }}'
 
 - name: Get Rust version
-  command: 'rustc -V'
+  command: '{{ ansible_env.HOME }}/.cargo/bin/rustc -V'
   changed_when: false
   register: rust_version
 
