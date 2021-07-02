@@ -57,18 +57,23 @@ freeton_node_keys: "/home/freeton/ton-keys"
 
 # Freeton smart contracts
 freeton_node_contract_URLs:
-  - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/depool/DePool.abi.json
-  - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/depool/DePool.tvc
-  - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/depool/DePoolHelper.abi.json
-  - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/depool/DePoolHelper.tvc
   - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/safemultisig/SafeMultisigWallet.abi.json
   - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/safemultisig/SafeMultisigWallet.tvc
   - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/setcodemultisig/SetcodeMultisigWallet.abi.json
   - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/setcodemultisig/SetcodeMultisigWallet.tvc
-  - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/depool/DePoolProxy.tvc
 
 freeton_node_contract_URLs_fld:
   - https://github.com/FreeTON-Network/fld.ton.dev/raw/main/scripts/Marvin.abi.json
+  - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/depool/DePoolProxy.tvc
+  - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/depool/DePool.abi.json
+  - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/depool/DePool.tvc
+  - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/depool/DePoolHelper.abi.json
+  - https://github.com/tonlabs/ton-labs-contracts/raw/master/solidity/depool/DePoolHelper.tvc
 
 freeton_node_contract_URLs_rustnet:
   - https://raw.githubusercontent.com/tonlabs/rustnet.ton.dev/main/docker-compose/ton-node/configs/Elector.abi.json
+  - https://github.com/tonlabs/ton-labs-contracts/raw/RUSTCUP_DEPOOL_--_DO_NOT_DEPLOY_ON_MAINNET/solidity/depool/DePool.abi.json
+  - https://github.com/tonlabs/ton-labs-contracts/raw/RUSTCUP_DEPOOL_--_DO_NOT_DEPLOY_ON_MAINNET/solidity/depool/DePool.tvc
+  - https://github.com/tonlabs/ton-labs-contracts/raw/RUSTCUP_DEPOOL_--_DO_NOT_DEPLOY_ON_MAINNET/solidity/depool/DePoolHelper.abi.json
+  - https://github.com/tonlabs/ton-labs-contracts/raw/RUSTCUP_DEPOOL_--_DO_NOT_DEPLOY_ON_MAINNET/solidity/depool/DePoolHelper.tvc
+  - https://github.com/tonlabs/ton-labs-contracts/raw/RUSTCUP_DEPOOL_--_DO_NOT_DEPLOY_ON_MAINNET/solidity/depool/DePoolProxy.tvc
