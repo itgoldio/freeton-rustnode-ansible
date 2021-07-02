@@ -31,6 +31,24 @@
 - name: Include os specific tasks
   include_tasks: "{{ ansible_pkg_mgr }}.yml"
 
+# - name: Stats libzstd.so
+#   stat:
+#     path: "/usr/local/lib/libzstd.so.{{ zstd_version }}"
+#   register: libzstd_exists
+
+# - name: Download and extract zstd sources
+#   unarchive:
+#     src: 'https://github.com/facebook/zstd/releases/download/v{{ zstd_version }}/zstd-{{ zstd_version }}.tar.gz'
+#     dest: /usr/local/src
+#     remote_src: yes
+#   when: not libzstd_exists.stat.exists
+
+# - name: Compile zstd
+#   command: 'make install'
+#   args:
+#     chdir: '/usr/local/src/zstd-{{ zstd_version }}'
+#   when: not libzstd_exists.stat.exists
+
 - name: Download Rust init
   get_url:
     url: '{{ rustup_mirror }}/{{ rustup_platform }}/rustup-init'
@@ -84,12 +102,14 @@
     - name: Update repo deps | freeton node
       command: '{{ ansible_env.HOME }}/.cargo/bin/cargo update --manifest-path {{ freeton_node_src_dir }}/freeton_node/Cargo.toml'
     - name: Build repo | freeton node
-      command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/freeton_node/Cargo.toml --target-dir {{ freeton_node_src_dir }} --release{% if freeton_node_metrics_enabled == true %} --features metrics{% endif %}'
+      command: '{{ ansible_env.HOME }}/.cargo/bin/cargo build --manifest-path {{ freeton_node_src_dir }}/freeton_node/Cargo.toml --target-dir {{ freeton_node_src_dir }} --release{% if freeton_node_metrics_enabled == true %} --features metrics{% endif %}{% if freeton_node_compression_enabled == true %} --features compression{% endif %}'
   when: freeton_node_sources.changed or freeton_node_force_recompile
   environment:
     RUSTFLAGS: "{{ rust_flags }}"
     RUST_VERSION: "{{ rust_version.stdout }}"
     GC_TON_NODE: "{{ freeton_node_sources.after }}"
+    ZSTD_LIB_DIR: "{% if ansible_pkg_mgr == 'dnf' %}/usr/lib64{% elif ansible_pkg_mgr == 'apt' %}/usr/lib/x86_64-linux-gnu{% endif %}"
+    #PKG_CONFIG_PATH: /usr/local/lib/pkgconfig
 
 
 - name: Build freeton node tools

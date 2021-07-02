@@ -25,6 +25,9 @@ set_limits: true  # or 'false'
 soft_nofile: 65536
 hard_nofile: 200000
 
+# zstd parameters
+# zstd_version: 1.5.0
+
 # Rust parameters
 rustup_mirror : https://static.rust-lang.org/rustup/dist
 rustup_platform : x86_64-unknown-linux-gnu

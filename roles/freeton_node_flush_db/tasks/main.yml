@@ -15,3 +15,4 @@
         - "{{ freeton_node_config_dir }}/console.json"
         - "{{ freeton_node_config_dir }}/console_config.json"
         - "{{ freeton_node_work_dir }}/node_db"
+        - "{{ freeton_node_src_dir }}/release"

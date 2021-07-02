@@ -1,8 +1,12 @@
+## 1.5.1
+- Added tone_node compression support - enabled by default
+
 ## 1.5.0
 - fix scripts according tonos-cli changes
 - ability to set custom DAPP server
 - log collecting improvements
 - new freeton_node build envs
+
 ## 1.4.8
 - add -m flag to ton-node-validate-current.sh and ton-node-validate-next.sh
 it fix output for monitoring style

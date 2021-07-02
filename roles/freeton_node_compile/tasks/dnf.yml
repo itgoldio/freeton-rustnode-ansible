@@ -3,6 +3,7 @@
     name:
       - "@Development tools"
       - openssl-devel
+      - libzstd-devel
       - clang
       - cmake
     state: latest

@@ -3,6 +3,7 @@
     name:
       - git
       - libssl-dev
+      - libzstd-dev
       - pkg-config
       - build-essential
       - autoconf
