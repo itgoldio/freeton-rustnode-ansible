@@ -1,6 +1,6 @@
 #!/bin/bash -eE
 
-
+TON_ELECTION_TICKTOK_IS_SENDED_RETURN_STAKE="depool.ticktock.sended.returntsake"
 TON_ELECTION_TICKTOK_IS_SENDED="depool.ticktock.sended"
 # 60 sec delay in depool smartcontract
 # wait 10 min for safely
@@ -81,6 +81,9 @@ if [ -f $TON_ELECTION_SUBFOLDER/$TON_ELECTION_TICKTOK_IS_SENDED ]; then
    echo "INFO: ticktok has been sent already"
    exit
 fi
+
+
+
    
 DEPOOL_TICKTOK_RESULT="$($TON_CLI -c $TON_CLI_CONFIG depool --addr $DEPOOL_ADDR ticktock -w $TIK_ADDR -s $TIK_PRV_KEY)"
 
@@ -89,6 +92,14 @@ if [ -z "$DEPOOL_TICKTOK_TRANSACTION_ID" ];then
    echo "ERROR: can't create ticktok $DEPOOL_TICKTOK_RESULT"
    exit
 fi
+
+if [ ! -f $TON_ELECTION_SUBFOLDER/$TON_ELECTION_TICKTOK_IS_SENDED_RETURN_STAKE ]; then
+   touch $TON_ELECTION_SUBFOLDER/$TON_ELECTION_TICKTOK_IS_SENDED_RETURN_STAKE
+   echo $DEPOOL_TICKTOK_RESULT >> $TON_ELECTION_SUBFOLDER/$TON_ELECTION_TICKTOK_IS_SENDED_RETURN_STAKE
+   echo "$DEPOOL_TICKTOK_RESULT"
+   exit
+fi
+
 
 touch $TON_ELECTION_SUBFOLDER/$TON_ELECTION_TICKTOK_IS_SENDED
 echo $DEPOOL_TICKTOK_RESULT >> $TON_ELECTION_SUBFOLDER/$TON_ELECTION_TICKTOK_IS_SENDED

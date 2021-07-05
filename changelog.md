@@ -1,4 +1,7 @@
 ## 1.5.2
+- tick depol twice (rustcup depol has another logic as mainnet depol)
+
+## 1.5.2
 - Change default path for depol files (for rustcup only)
 
 ## 1.5.1
