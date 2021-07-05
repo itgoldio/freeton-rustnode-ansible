@@ -111,7 +111,6 @@ do
 
       TON_ADNL_KEY_FROM_ELECTOR=$( echo "$TON_PARTICIPANTS_CURRENT"  | { grep "$TON_ADNL_KEY" || true; } )
 
-      echo "$TON_ADNL_KEY_FROM_ELECTOR"
       if [ -z "$TON_ADNL_KEY_FROM_ELECTOR" ]; then
             print_if_not_validate
             exit
