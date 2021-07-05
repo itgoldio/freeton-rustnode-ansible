@@ -1,5 +1,5 @@
 #!/bin/bash -eE
-
+#set -x
 # export ton environments
 . ton-env.sh
 
@@ -107,9 +107,11 @@ do
    if [ $TON_KEYS_FOR_ELECTION_ID == $ELECTIONS_DATE ]; then 
 
       TON_ADNL_KEY_HASH=$(cat $TON_NODE_CONFIG | jq ".validator_keys[$i].validator_key_id"| tr -d \")
-      TON_ADNL_KEY="$($TON_CONSOLE -C $TON_CONSOLE_CONFIG -c "exportpub $TON_ADNL_KEY_HASH" | awk -F"imported key:" '{print $2}' | awk -F" " '{print $1}' )"
-      TON_ADNL_KEY_FROM_ELECTOR=$( echo "$TON_PARTICIPANTS_CURRENT"  | grep $TON_ADNL_KEY)
+      TON_ADNL_KEY=$($TON_CONSOLE -C $TON_CONSOLE_CONFIG -c "exportpub $TON_ADNL_KEY_HASH" | awk -F"imported key:" '{print $2}' | awk -F" " '{print $1}' | tr -d "\n" )
 
+      TON_ADNL_KEY_FROM_ELECTOR=$( echo "$TON_PARTICIPANTS_CURRENT"  | { grep "$TON_ADNL_KEY" || true; } )
+
+      echo "$TON_ADNL_KEY_FROM_ELECTOR"
       if [ -z "$TON_ADNL_KEY_FROM_ELECTOR" ]; then
             print_if_not_validate
             exit

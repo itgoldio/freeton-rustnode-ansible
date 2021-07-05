@@ -1,4 +1,7 @@
-## 1.5.2
+## 1.5.4
+- fix ton-node-validate-next.sh answerd, when grep not found info
+
+## 1.5.3
 - tick depol twice (rustcup depol has another logic as mainnet depol)
 
 ## 1.5.2
