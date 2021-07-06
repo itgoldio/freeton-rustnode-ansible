@@ -1,3 +1,6 @@
+## 1.5.5
+- Ubuntu 18 and Debian 10 libzstd fixes
+
 ## 1.5.4
 - fix ton-node-validate-next.sh answerd, when grep not found info
 
