@@ -17,13 +17,32 @@ sysctl_conf:
     - { name: "net.ipv6.conf.all.disable_ipv6", value: "1" }
     - { name: "net.ipv6.conf.default.disable_ipv6", value: "1" }
     - { name: "net.ipv6.conf.lo.disable_ipv6", value: "1" }
-    - { name: "net.core.rmem_max", value: "16777216" }
-    - { name: "net.core.netdev_max_backlog", value: "2000" }
+    - { name: "net.core.rmem_max", value: "134217728" }
+    - { name: "net.core.wmem_max", value: "134217728" }
+    - { name: "net.core.rmem_default", value: "134217728" }
+    - { name: "net.core.wmem_default", value: "134217728" }
+    - { name: "net.ipv4.tcp_mem", value: "1048576 16777216 67108864" }
+    - { name: "net.ipv4.tcp_rmem", value: "1048576 16777216 67108864" }
+    - { name: "net.ipv4.tcp_wmem", value: "1048576 16777216 67108864" }
+    - { name: "net.ipv4.udp_mem", value: "1048576 16777216 67108864" }
+    - { name: "net.ipv4.udp_rmem_min", value: "1048576" }
+    - { name: "net.ipv4.udp_wmem_min", value: "1048576" }
+    - { name: "net.core.optmem_max", value: "134217728" }
+    - { name: "net.core.somaxconn", value: "65535" }
+    - { name: "net.core.netdev_max_backlog", value: "250000" }
+    - { name: "net.ipv4.conf.all.rp_filter", value: "1" }
+    - { name: "net.ipv4.conf.all.arp_filter", value: "1" }
+    - { name: "net.ipv4.conf.all.arp_ignore", value: "1" }
+    - { name: "net.ipv4.conf.all.arp_announce", value: "2" }
+    - { name: "vm.overcommit_memory", value: "2" }
+    - { name: "vm.overcommit_ratio", value: "100" }
+    - { name: "vm.swappiness", value: "10" }
+    - { name: "vm.vfs_cache_pressure", value: "200" }
 
 # Max open file limit
 set_limits: true  # or 'false'
-soft_nofile: 65536
-hard_nofile: 200000
+soft_nofile: 6553600
+hard_nofile: 20000000
 
 # zstd parameters
 # zstd_version: 1.5.0
