@@ -41,8 +41,8 @@ sysctl_conf:
 
 # Max open file limit
 set_limits: true  # or 'false'
-soft_nofile: 6553600
-hard_nofile: 20000000
+soft_nofile: 65536
+hard_nofile: 200000
 
 # zstd parameters
 # zstd_version: 1.5.0
