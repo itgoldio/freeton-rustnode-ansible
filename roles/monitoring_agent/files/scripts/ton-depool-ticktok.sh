@@ -3,8 +3,8 @@
 TON_ELECTION_TICKTOK_IS_SENDED_RETURN_STAKE="depool.ticktock.sended.returntsake"
 TON_ELECTION_TICKTOK_IS_SENDED="depool.ticktock.sended"
 # 60 sec delay in depool smartcontract
-# wait 10 min for safely
-TON_DEPOOL_ELECTOR_UNFREEZE_LAG_SEC="600"
+# wait 2 min for safely
+TON_DEPOOL_ELECTOR_UNFREEZE_LAG_SEC="120"
 
 # export ton environments
 . ton-env.sh
