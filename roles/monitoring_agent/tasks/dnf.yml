@@ -15,3 +15,4 @@
     state: latest
     update_cache: yes
   notify: restart_telegraf
+  ignore_errors: true

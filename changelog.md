@@ -1,3 +1,7 @@
+## 1.5.6
+- Change rust node default branch
+- Fixed rust version
+
 ## 1.5.5
 - Ubuntu 18 and Debian 10 libzstd fixes
 

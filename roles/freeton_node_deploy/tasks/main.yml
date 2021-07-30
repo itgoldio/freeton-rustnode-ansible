@@ -146,11 +146,15 @@
   notify: freeton_systemd
 
 - name: Config tonos-cli
-  command: ./tonos-cli --url {{ton_net_url}} config
+  command: "{{ item }}"
   args:
     chdir: "{{ freeton_node_tools_dir }}"
   become: yes
   become_user: "{{ freeton_node_user }}"
+  loop:
+    - "./tonos-cli config endpoint reset"
+    - "./tonos-cli config endpoint add {{ ton_net_url }} {{ freeton_node_DAPP_endpoints }}"
+    - "./tonos-cli --url {{ ton_net_url }} config"
 
 - name: Copy tonos-cli.conf.json to configs dir
   copy:
@@ -187,8 +191,8 @@
     path: "{{ freeton_node_config_dir }}/console_config.json"
   when: ton_node_key_generated.changed
 
-- name: Kill ton_node process
-  shell: "pkill ton_node"
+- name: Kill nohup ton_node processes
+  shell: "kill -9 `jobs -l | awk '{print $2}'`"
   when: ton_node_key_generated.changed
   ignore_errors: true
 
