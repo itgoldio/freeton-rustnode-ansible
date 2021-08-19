@@ -10,7 +10,7 @@ freeton_node_DAPP_endpoints: "https://rustnet1.ton.dev,https://rustnet2.ton.dev,
 
 # Get freeton node commit id: https://github.com/tonlabs/ton-labs-node/commits
 freeton_node_github_repo: "https://github.com/tonlabs/ton-labs-node.git"
-freeton_node_github_commit_id: "rustnet"
+freeton_node_github_commit_id: "a7aa40bdb6e9a4d014f1f01321606593a5a7cfcb"
 # Recompile binary without sources changes: false|true
 freeton_node_force_recompile: false
 # Get freeton node tools commit id: https://github.com/tonlabs/ton-labs-node-tools/commits"
