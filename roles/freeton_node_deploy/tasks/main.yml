@@ -165,10 +165,21 @@
     mode: u=rw,g=r,o=
     remote_src: yes
 
+- name: "Set lifetime to 600"
+  shell: "{{ item }}"
+  become: yes
+  become_user: "{{ freeton_node_user }}"
+  loop:
+    - 'jq ".config.lifetime=600" "{{ freeton_node_config_dir }}/tonos-cli.conf.json" > {{ freeton_node_config_dir }}/tonos-cli.conf_tmp.json'
+    - 'cat {{ freeton_node_config_dir }}/tonos-cli.conf_tmp.json > {{ freeton_node_config_dir }}/tonos-cli.conf.json'
+
 - name: Remove tonos-cli.conf.json in tools dir
   file:
-    path: "{{ freeton_node_tools_dir }}/tonos-cli.conf.json"
+    path: "{{ item }}"
     state: absent
+  loop:
+    - "{{ freeton_node_config_dir }}/tonos-cli.conf_tmp.json"
+    - "{{ freeton_node_tools_dir }}/tonos-cli.conf.json"
 
 - name: Generate keys
   shell: "./keygen > {{ freeton_node_config_dir }}/{{ ansible_hostname }}_client_keys.json"
