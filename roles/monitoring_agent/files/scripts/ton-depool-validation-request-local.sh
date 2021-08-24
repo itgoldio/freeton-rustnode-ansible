@@ -27,6 +27,20 @@ fi
 
 echo "INFO: election is active"
 
+TON_CONFIG_15=$($TON_CONSOLE -C $TON_CONSOLE_CONFIG -c "getconfig 15")
+TON_CONFIG_15_JSON=$(echo $TON_CONFIG_15 | awk '{split($0, a, "param:"); print a[2]}')
+
+TON_CONFIG_34=$($TON_CONSOLE -C $TON_CONSOLE_CONFIG -c "getconfig 34") 
+TON_CONFIG_34_JSON=$(echo $TON_CONFIG_34 | awk '{split($0, a, "param:"); print a[2]}')
+
+TON_CURRENT_VALIDATION_END=$(echo $TON_CONFIG_34_JSON | jq '.p34.utime_until') 
+TON_ELECTIONS_START_BEFORE=$(echo $TON_CONFIG_15_JSON | jq '.p15.elections_start_before')
+TON_ELECTIONS_END_BEFORE=$(echo $TON_CONFIG_15_JSON | jq '.p15.elections_end_before')
+
+TON_ELECTIONS_START=$(($TON_CURRENT_VALIDATION_END - $TON_ELECTIONS_START_BEFORE))
+TON_ELECTIONS_END=$(($TON_CURRENT_VALIDATION_END - $TON_ELECTIONS_END_BEFORE))
+
+
 ##=================
 ## region: CHECK ALREADY IN VNEXT
 ##=================
@@ -52,13 +66,11 @@ if [ -f $TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_VALIDATION_REQ_SENDED ]; th
    exit
 fi
 
-set -x
-
 if [ ! -f $TON_ELECTION_SUBFOLDER/$TON_ELECTION_PROXY_FILE_NAME ]; then
    TON_DEPOOL_EVENTS=$($TON_CLI -c $TON_CLI_CONFIG depool --addr $DEPOOL_ADDR  events)
    echo "$TON_DEPOOL_EVENTS" > "$TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_EVENTS_FILE_NAME"
 
-   TON_PROXY=$(echo "$TON_DEPOOL_EVENTS" | grep $ELECTIONS_DATE | jq ".proxy")
+   TON_PROXY=$(echo "$TON_DEPOOL_EVENTS" | grep $TON_VALIDATION_NEXT_DATE | jq ".proxy")
    if [ -z $TON_PROXY  ]; then
       echo "ERROR: can't find proxy, see events $TON_DEPOOL_EVENTS"
       rm $TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_EVENTS_FILE_NAME
@@ -71,9 +83,18 @@ fi
 ##=================
 ## region: CREATE validator-query.boc
 ##=================
+set -x
+TON_PROXY=$(cat $TON_ELECTION_SUBFOLDER/$TON_ELECTION_PROXY_FILE_NAME)
+
+if [ -z $TON_PROXY ]; then
+   echo "ERROR: proxy data is empty $TON_ELECTION_SUBFOLDER/$TON_ELECTION_PROXY_FILE_NAME"
+   exit 1
+fi
+
 if [ ! -f $TON_ELECTION_SUBFOLDER/validator-query.boc ]; then
-   TON_CONSOLE_CONFIG_NEW=$(jq ".wallet_id=\"$DEPOOL_PROXY\"" $TON_CONSOLE_CONFIG)  
+   TON_CONSOLE_CONFIG_NEW=$(jq ".wallet_id=$TON_PROXY" $TON_CONSOLE_CONFIG)  
    echo $TON_CONSOLE_CONFIG_NEW > $TON_CONSOLE_CONFIG
+
 
    ELECTOR_CONFIG_VALIDATORS_ELECTED_FOR=`echo "$TON_CONFIG_15_JSON" | jq ".p15.validators_elected_for"`
    ELECTOR_CONFIG_STAKE_HELD_FOR=`echo "$TON_CONFIG_15_JSON" | jq ".p15.stake_held_for"`
