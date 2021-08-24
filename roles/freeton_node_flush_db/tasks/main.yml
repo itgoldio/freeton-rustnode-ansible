@@ -16,3 +16,4 @@
         - "{{ freeton_node_config_dir }}/console_config.json"
         - "{{ freeton_node_work_dir }}/node_db"
         - "{{ freeton_node_src_dir }}/release"
+        - "{{ freeton_node_src_dir }}/freeton_node"

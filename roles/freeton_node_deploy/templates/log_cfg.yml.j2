@@ -27,57 +27,57 @@ root:
 # debug include debug, info and warn levels,
 # info  include info and warn
 # warn  just warn level
-  level: warn
+  level: off
   appenders:
     - rolling
 
 loggers:
   # node messages
   ton_node:
-    level: warn
+    level: off
   boot:
-    level: info
+    level: off
   sync:
-    level: info
+    level: off
   telemetry:
-    level: error
+    level: off
 
   # adnl messages
   adnl:
-    level: warn
+    level: off
 
   overlay:
-    level: warn
+    level: off
 
   overlay_broadcast:
-    level: warn
+    level: off
 
   rldp:
-    level: warn
+    level: off
 
   dht:
-    level: warn
+    level: off
 
   # block messages
   ton_block:
-    level: error
+    level: off
 
   # block messages
   executor:
-    level: error
+    level: off
 
   # tvm messages
   tvm:
-    level: error
+    level: off
 
   librdkafka:
-    level: error
+    level: off
 
   validator:
-    level: info
+    level: off
 
   catchain:
-    level: info
+    level: off
 
   validator_session:
-    level: info
+    level: off
