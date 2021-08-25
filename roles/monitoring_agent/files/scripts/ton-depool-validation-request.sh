@@ -64,7 +64,7 @@ echo "INFO: election is active"
 ## region: CHECK ALREADY IN VNEXT
 ##=================
 
-ALREADY_VNEXT_LIST=$(ton-node-validate-next.sh)
+#ALREADY_VNEXT_LIST=$(ton-node-validate-next.sh)
 if [ $ALREADY_VNEXT_LIST == "True" ]
    then
         echo "INFO: already in vnext list"
@@ -96,10 +96,14 @@ fi
 ##=================
 
 if [ -f $TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_VALIDATION_REQ_SENDED ]; then
-   echo "INFO: request already sended, see $TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_VALIDATION_REQ_SENDED"
-   exit
+   if [ $1 = '-f' ] || [ $1 = '-force' ];then
+      echo "INFO: force mod"
+      rm $TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_VALIDATION_REQ_SENDED
+   else
+      echo "INFO: request already sended, see $TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_VALIDATION_REQ_SENDED"
+      exit
+   fi
 fi
-
 
 if [ ! -f $TON_ELECTION_SUBFOLDER/$TON_ELECTION_PROXY_FILE_NAME ]; then
    TON_DEPOOL_EVENTS=$($TON_CLI -c $TON_CLI_CONFIG depool --addr $DEPOOL_ADDR  events)
