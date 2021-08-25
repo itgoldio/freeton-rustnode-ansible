@@ -65,11 +65,11 @@ echo "INFO: election is active"
 ##=================
 
 #ALREADY_VNEXT_LIST=$(ton-node-validate-next.sh)
-if [ $ALREADY_VNEXT_LIST == "True" ]
-   then
-        echo "INFO: already in vnext list"
-        exit 0
-fi;
+#if [ $ALREADY_VNEXT_LIST == "True" ]
+#   then
+#        echo "INFO: already in vnext list"
+#        exit 0
+#fi;
 
 ##=================
 ## region: CHECK UNCOMPLITE TRANSACTION
