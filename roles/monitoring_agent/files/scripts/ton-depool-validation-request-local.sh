@@ -123,7 +123,7 @@ if [ ! -f "$TON_ELECTION_SUBFOLDER/$TON_VALIDATOR_QUERY_BOC_FOR_CONSOLE_FILE_NAM
 
    TON_PAYLOAD=$(base64 --wrap=0 "${TON_ELECTION_SUBFOLDER}/validator-query.boc")
 
-   $TON_CLI message --raw --output $TON_ELECTION_SUBFOLDER/$TON_VALIDATOR_QUERY_BOC_FOR_CONSOLE_FILE_NAME --abi $TON_CONTRACT_SAFEMULTISIGWALLET_ABI --sign $VALIDATOR_WALLET_PRV_KEY_1 $VALIDATOR_WALLET_ADDR submitTransaction "{\"dest\":\"$DEPOOL_ADDR\",\"value\":\"1000000000\",\"bounce\":true,\"allBalance\":false,\"payload\":\"$TON_PAYLOAD\"}" --lifetime 600
+   $TON_CLI message --raw --output $TON_ELECTION_SUBFOLDER/$TON_VALIDATOR_QUERY_BOC_FOR_CONSOLE_FILE_NAME --abi $TON_CONTRACT_SAFEMULTISIGWALLET_ABI --sign $VALIDATOR_WALLET_PRV_KEY_1 $VALIDATOR_WALLET_ADDR submitTransaction "{\"dest\":\"$DEPOOL_ADDR\",\"value\":\"1120000000\",\"bounce\":true,\"allBalance\":false,\"payload\":\"$TON_PAYLOAD\"}" --lifetime 600
 fi
 
 if [ ! -f "$TON_ELECTION_SUBFOLDER/$TON_VALIDATOR_QUERY_BOC_FOR_CONSOLE_FILE_NAME" ]; then
