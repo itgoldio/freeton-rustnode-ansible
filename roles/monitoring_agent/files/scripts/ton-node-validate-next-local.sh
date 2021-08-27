@@ -9,11 +9,14 @@ ton-check-env.sh TON_NODE_CONFIG
 ton-check-env.sh TON_CONSOLE
 ton-check-env.sh TON_CONSOLE_CONFIG
 
+TON_ELECTOR_TVC="elector.tvc"
+
 MonitoringOut=false
 
 while getopts "m" opt; do
         case $opt in
-                m)  MonitoringOut=true   
+                m)  MonitoringOut=true ;;
+                *)  MonitoringOut=false ;;
         esac
 done
 
@@ -49,15 +52,10 @@ if [ ! -z $IN_NEXT_ROUND ]; then
    fi
 fi
 
-
-
-
-# check election
-ELECTION_STATE=$(ton-election-state.sh)
-if [ $ELECTION_STATE != "ACTIVE" ];
-    then
-        print_if_not_validate
-        exit
+ELECTION_IS_ACTIVE=$(ton-election-is-active-local.sh)
+if (( $ELECTION_IS_ACTIVE == 0 )); then
+   print_if_not_validate
+   exit 0
 fi
 
 #cat $TON_NODE_CONFIG
@@ -68,11 +66,15 @@ if [[ $TON_VALIDATOR_KEYS_COUNT == 0 ]]; then
    exit 0
 fi
 
+TON_CONFIG_1=$($TON_CONSOLE -C $TON_CONSOLE_CONFIG -c "getconfig 1")
+TON_CONFIG_1_JSON=$(echo $TON_CONFIG_1 | awk '{split($0, a, "param:"); print a[2]}')
 
-# get elector address
-ELECTOR_ADDR="-1:$($TON_CLI -c $TON_CLI_CONFIG  getconfig 1 | grep 'p1:' | sed 's/Config p1:[[:space:]]*//g' | tr -d \")"
-TON_ELECTOR_GET=$($TON_CLI -c $TON_CLI_CONFIG run $ELECTOR_ADDR get {} --abi $TON_CONTRACT_ELECTOR_ABI)
-TON_PARTICIPANTS_CURRENT=$(echo $TON_ELECTOR_GET | awk -F'Result: ' '{print $2}' | jq ".cur_elect")
+ELECTOR_ADDR=$(echo "$TON_CONFIG_1_JSON" | jq -r ".p1" )
+ELECTOR_ADDR="-1:"$ELECTOR_ADDR
+
+TON_ELECTOR_TVC_RQW=$($TON_CONSOLE -C $TON_CONSOLE_CONFIG -c "getaccountstate $ELECTOR_ADDR $TON_ELECTOR_TVC")
+
+TON_PARTICIPANTS_CURRENT=$($TON_CLI -j run --boc $TON_ELECTOR_TVC  get '{}' --abi $TON_CONTRACT_ELECTOR_ABI | jq ".cur_elect.members")
 
 TON_VALIDATION_NEXT_DATE=$(ton-validation-next-date-local.sh)
 
