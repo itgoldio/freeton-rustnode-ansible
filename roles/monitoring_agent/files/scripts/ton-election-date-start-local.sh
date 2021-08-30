@@ -18,18 +18,24 @@ TON_CURRENT_VALIDATION_END=$(echo $TON_CONFIG_34_JSON | jq '.p34.utime_until')
 TON_ELECTIONS_START_BEFORE=$(echo $TON_CONFIG_15_JSON | jq '.p15.elections_start_before')
 TON_ELECTIONS_END_BEFORE=$(echo $TON_CONFIG_15_JSON | jq '.p15.elections_end_before')
 
+if [[ -z $TON_CURRENT_VALIDATION_END || -z $TON_ELECTIONS_START_BEFORE || -z $TON_ELECTIONS_END_BEFORE ]]
+then
+    echo "Empty data in .p34.utime_until or .p15.elections_start_before or .p15.elections_end_before"
+    exit 64
+fi
+
 TON_ELECTIONS_START=$(($TON_CURRENT_VALIDATION_END - $TON_ELECTIONS_START_BEFORE))
 TON_ELECTIONS_END=$(($TON_CURRENT_VALIDATION_END - $TON_ELECTIONS_END_BEFORE))
 
 if (( $CURRENT_UNIXTIME>=$TON_ELECTIONS_END ));
     then
         echo "INFO: Election is not started"
-        exit -1
+        exit 65
 fi
 
 if (( $CURRENT_UNIXTIME<=$TON_ELECTIONS_START ));
     then
         echo "INFO: Election is not started"
-        exit -1
+        exit 65
 fi
 echo "$TON_ELECTIONS_START"
