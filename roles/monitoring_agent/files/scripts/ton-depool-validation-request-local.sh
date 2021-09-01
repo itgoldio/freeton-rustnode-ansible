@@ -62,7 +62,7 @@ fi
 ##=================
 
 if [ -f $TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_VALIDATION_REQ_SENDED ]; then
-   if [ $1 = '-f' ] || [ $1 = '-force' ];then
+   if [[ "$1" == "-f" || "$1" == "-force" ]];then
       echo "INFO: force mod"
       rm $TON_ELECTION_SUBFOLDER/$TON_ELECTION_DEPOOL_VALIDATION_REQ_SENDED
    else

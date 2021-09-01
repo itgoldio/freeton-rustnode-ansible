@@ -20,6 +20,16 @@
     - "{{ freeton_node_scripts }}"
     - "{{ freeton_node_election }}"
 
+- name: Set chmod to directories for compatibility
+  file:
+    path: "{{ item }}"
+    owner: "{{ freeton_node_user }}"
+    group: "{{ freeton_node_group }}"
+    mode: '0770'
+  loop:
+    - "{{ freeton_node_scripts }}"
+    - "{{ freeton_node_election }}"
+
 - name: Create freeton keys dir
   file:
     path: "{{ freeton_node_keys }}"
